@@ -1,4 +1,8 @@
 # COVID_Inisghts
+Currently you can see the number of cases in each state if you run states.py.
+(You would have to install bokeh.) 
+
+I also started creating a package for our projects.<br>
 
 # To extract JHU dataset:
 from COVID.extract import JHU <br>
