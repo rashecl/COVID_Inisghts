@@ -13,10 +13,18 @@ def getCountryDF(confirmed = pd.read_csv(urls[0]), recovered = pd.read_csv(urls[
     time = pd.to_datetime(list(deaths.columns[4::]))
     df =pd.DataFrame()
     for country in confirmed['Country/Region'].unique():
-        df = pd.concat([df, pd.DataFrame({country: {'confirmed': np.sum(confirmed[confirmed['Country/Region'] == country].iloc[:,4:]),
-                                                  'recovered': np.sum(recovered[recovered['Country/Region'] == country].iloc[:,4:]),
-                                                  'deaths': np.sum(deaths[deaths['Country/Region'] == country].iloc[:,4:]),
-                                                  'time': time}})], axis=1)
+        confirmed_t = np.sum(confirmed[confirmed['Country/Region'] == country].iloc[:, 4:])
+        recovered_t = np.sum(recovered[recovered['Country/Region'] == country].iloc[:, 4:])
+        deaths_t = np.sum(deaths[deaths['Country/Region'] == country].iloc[:, 4:])
+        if np.any([np.isnan(confirmed_t[-1]), np.isnan(recovered_t[-1]), np.isnan(deaths_t[-1])]):
+            lastIdx = np.min([len(confirmed_t), len(recovered_t), len(deaths_t)]) - 1
+        else:
+            lastIdx = np.min([len(confirmed_t), len(recovered_t), len(deaths_t)])
+        df = pd.concat([df, pd.DataFrame(
+            {country: {'confirmed': confirmed_t[:lastIdx],
+                       'recovered': recovered_t[:lastIdx],
+                       'deaths': deaths_t[:lastIdx],
+                       'time': time[:lastIdx]}})], axis=1)
     return df
 
 # Note: This is continental US
@@ -60,38 +68,45 @@ def getState_RegionalDF(confirmed = confirmed, recovered = recovered , deaths = 
                 state_idx = state_abbrevs.index(loc[1])
                 state_name = state_names[state_idx]
                 state = state_abbrevs[state_idx]
-                if state == 'AL':
-                    print(idx)
-                confirmed_t = np.reshape(np.array(confirmed.iloc[idx, 4::]),(-1))
-                recovered_t = np.reshape(np.array(recovered.iloc[idx, 4::]), (-1))
-                deaths_t = np.reshape(np.array(deaths.iloc[idx, 4::]), (-1))
+                confirmed_t = confirmed.iloc[idx, 4::].ravel()
+                recovered_t = recovered.iloc[idx, 4::].ravel()
+                deaths_t = deaths.iloc[idx, 4::].ravel()
                 location_name = loc[0].split(' ')[:-1] if loc[0].split(' ')[-1] == 'County' else loc[0]
+                if np.any([np.isnan(confirmed_t[-1]), np.isnan(recovered_t[-1]), np.isnan(deaths_t[-1])]):
+                    lastIdx = np.min([len(confirmed_t), len(recovered_t), len(deaths_t)]) - 1
+                else:
+                    lastIdx = np.min([len(confirmed_t), len(recovered_t), len(deaths_t)])
                 df = df.append({'state': state,
                                 'state_name': state_name,
                                 'location': location_name,
                                 'Lat': deaths['Lat'][idx],
                                 'Long': deaths['Long'][idx],
-                                'confirmed': confirmed_t,
-                                'recovered': recovered_t,
-                                'deaths': deaths_t,
-                                'time': time}, ignore_index=True)
+                                'confirmed': confirmed_t[:lastIdx],
+                                'recovered': recovered_t[:lastIdx],
+                                'deaths': deaths_t[:lastIdx],
+                                'time': time[:lastIdx]}, ignore_index=True)
+
         elif len(loc) == 1:
             if loc[0] in state_names:
                 state_name = loc[0]
                 state_idx = state_names.index(loc[0])
                 state = state_abbrevs[state_idx]
-                confirmed_t = np.reshape(np.array(confirmed.iloc[idx, 4::]),(-1))
-                recovered_t = np.reshape(np.array(recovered.iloc[idx, 4::]), (-1))
-                deaths_t = np.reshape(np.array(deaths.iloc[idx, 4::]), (-1))
+                confirmed_t = confirmed.iloc[idx, 4::].ravel()
+                recovered_t = recovered.iloc[idx, 4::].ravel()
+                deaths_t = deaths.iloc[idx, 4::].ravel()
+                if np.any([np.isnan(confirmed_t[-1]), np.isnan(recovered_t[-1]), np.isnan(deaths_t[-1])]):
+                    lastIdx = np.min([len(confirmed_t), len(recovered_t), len(deaths_t)]) - 1
+                else:
+                    lastIdx = np.min([len(confirmed_t), len(recovered_t), len(deaths_t)])
                 df = df.append({'state': state,
                                 'state_name': state_name,
                                 'location': np.nan,
                                 'Lat': deaths['Lat'][idx],
                                 'Long': deaths['Long'][idx],
-                                'confirmed': confirmed_t,
-                                'recovered': recovered_t,
-                                'deaths': deaths_t,
-                                'time': time}, ignore_index=True)
+                                'confirmed': confirmed_t[:lastIdx],
+                                'recovered': recovered_t[:lastIdx],
+                                'deaths': deaths_t[:lastIdx],
+                                'time': time[:lastIdx]}, ignore_index=True)
     return df
 
 def mergeStatesDF(states_regionsDF = getState_RegionalDF(), time = time):
