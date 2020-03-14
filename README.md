@@ -1,5 +1,5 @@
 # COVID_Inisghts
-Currently you can see the number of cases in each state if you run states.py.
+Currently you can see the number of cases in each state if you run US_coronavirus_map.py.
 (You would have to install bokeh.) 
 
 I also started creating a package for our projects.<br>
