@@ -5,7 +5,7 @@ from bokeh.io import show
 from bokeh.layouts import column, row
 from bokeh.io import curdoc
 from bokeh.models import LogColorMapper, LinearColorMapper, HoverTool, ColumnDataSource, CheckboxGroup
-from bokeh.palettes import RdYlBu11 as palette
+from bokeh.palettes import RdYlBu10 as palette
 from bokeh.plotting import figure
 from COVID.extract import JHU
 # from COVID import us_map
@@ -38,7 +38,7 @@ for state in stateBorders:
         print(state + ' does not have any records of cases')
         state_val.append(0)
 
-color_mapper = LinearColorMapper(palette=palette)
+# color_mapper = LinearColorMapper(palette=palette)
 
 usData = ColumnDataSource(data = dict(
     x=state_xs,
@@ -78,7 +78,7 @@ statePlot = figure(title="Coronavirus map", tools=TOOLS,
 statePlot.grid.grid_line_color = None
 statePlot.hover.point_policy = "follow_mouse"
 statePlot.patches('x', 'y', source=stateData,
-               fill_color={'field': 'val', 'transform': color_mapper2},
+               fill_color={'field': 'val', 'transform': color_mapper},
                fill_alpha=0.7, line_color="white", line_width=0.5)
 
 state = 'CA'
