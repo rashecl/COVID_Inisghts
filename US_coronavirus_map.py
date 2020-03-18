@@ -103,9 +103,8 @@ def updateState():
             else:
                 lastIdx = len(confirmed_t) - 1
             county_val.append(np.max(confirmed_t[:lastIdx]))
-            print(np.max(confirmed_t[:lastIdx]))
+            # print(np.max(confirmed_t[:lastIdx]))
         else:
-            print(county)
             county_val.append(0)
 
     stateData.data = dict(
@@ -115,12 +114,12 @@ def updateState():
         val=county_val,
         state=state_names)
 
-    gData.data = dict(
-        date=statesDF[state].time.astype(str),
-        time=statesDF[state].time,
-        confirmed=statesDF[state].confirmed,
-        recovered=statesDF[state].recovered,
-        deaths=statesDF[state].deaths)
+    lenTime = np.min([len(statesDF[state].time), len(statesDF[state].confirmed), len(statesDF[state].recovered), len(statesDF[state].deaths)])
+    gData.data = dict(date=statesDF[state].time.astype(str)[0:lenTime],
+        time=statesDF[state].time[0:lenTime],
+        confirmed=statesDF[state].confirmed[0:lenTime],
+        recovered=statesDF[state].recovered[0:lenTime],
+        deaths=statesDF[state].deaths[0:lenTime])
 
     # statePlot.x_range.start = -125
     # statePlot.x_range.end = -65
@@ -174,26 +173,35 @@ def state_tap(attr, old, new):
     stateCountyDF = state_regionalDF[state_regionalDF['state'] == state]
     print(new)
     if len(new) == 0:
-        print(state)
         graphPlot.title.text = stateBorders[state]['name']
+        lenTime = np.min([len(statesDF[state].time), len(statesDF[state].confirmed), len(statesDF[state].recovered),
+                          len(statesDF[state].deaths)])
         gData.data = dict(
-            date=statesDF[state].time.astype(str),
-            time=statesDF[state].time,
-            confirmed=statesDF[state].confirmed,
-            recovered=statesDF[state].recovered,
-            deaths=statesDF[state].deaths)
+            date=statesDF[state].time.astype(str)[0:lenTime],
+            time=statesDF[state].time[0:lenTime],
+            confirmed=statesDF[state].confirmed[0:lenTime],
+            recovered=statesDF[state].recovered[0:lenTime],
+            deaths=statesDF[state].deaths[0:lenTime])
     else:
         stateCountyDF = state_regionalDF[state_regionalDF['state'] == state]
         stateCountyBorders = countyBorders[countyBorders['state'] == state]
         county = stateCountyBorders.county_name.iloc[new[0]]
         print(stateBorders[state]['name'])
         print(county)
+        if len(stateCountyDF[stateCountyDF['county_name'] == county].time.values)==0:
+            return
+        date_t= stateCountyDF[stateCountyDF['county_name'] == county].time.values[0].astype(str)
+        time_t= stateCountyDF[stateCountyDF['county_name'] == county].time.values[0]
+        confirmed_t= stateCountyDF[stateCountyDF['county_name'] == county].confirmed.values[0]
+        recovered_t = stateCountyDF[stateCountyDF['county_name'] == county].recovered.values[0]
+        deaths_t = stateCountyDF[stateCountyDF['county_name'] == county].deaths.values[0]
+        lenTime = np.min([len(time_t), len(confirmed_t),len(recovered_t), len(deaths_t)])
         gData.data = dict(
-            date=stateCountyDF[stateCountyDF['county_name'] == county].time.values[0].astype(str),
-            time=stateCountyDF[stateCountyDF['county_name'] == county].time.values[0],
-            confirmed=stateCountyDF[stateCountyDF['county_name'] == county].confirmed.values[0],
-            recovered=stateCountyDF[stateCountyDF['county_name'] == county].recovered.values[0],
-            deaths=stateCountyDF[stateCountyDF['county_name'] == county].deaths.values[0])
+            date=date_t[0:lenTime],
+            time=time_t[0:lenTime],
+            confirmed=confirmed_t[0:lenTime],
+            recovered=recovered_t[0:lenTime],
+            deaths=deaths_t[0:lenTime])
         graphPlot.title.text = county
 
         # state = stateBorders.columns[new[0]]
