@@ -5,6 +5,9 @@ from bokeh.io import show
 from bokeh.layouts import column, row
 from bokeh.io import curdoc
 from bokeh.models import LogColorMapper, LinearColorMapper, HoverTool, ColumnDataSource, CheckboxGroup
+from bokeh.models import WheelZoomTool, TapTool, SaveTool, ResetTool, PanTool, HoverTool
+
+
 from bokeh.palettes import RdYlBu10 as palette
 from bokeh.plotting import figure
 from COVID.extract import JHU
@@ -53,12 +56,12 @@ gData = ColumnDataSource(data=dict(
     recovered=countriesDF['US'].recovered,
     deaths=countriesDF['US'].deaths))
 
-TOOLS = "pan,wheel_zoom, tap, reset,hover,save"
-TOOLS2 = "pan,wheel_zoom,reset,save"
-
+TOOLS = [PanTool(), WheelZoomTool(), TapTool(), HoverTool(), ResetTool(), SaveTool()]
+# TOOLS2 = "pan,wheel_zoom,reset,save"
+TOOLS2 = [PanTool(), WheelZoomTool(), HoverTool(), ResetTool(), SaveTool()]
 graphPlot = figure(tools=TOOLS2, x_axis_type='datetime', tooltips=[
                ("Date", "@date"), ("confirmed", "@confirmed"), ('recovered', '@recovered'), ('died', '@deaths')
-           ], width=300, height=300)
+           ], width=500, height=400)
 graphPlot.line('time', 'confirmed', source=gData, line_color='black')
 graphPlot.line('time', 'recovered', source=gData, line_color='green')
 graphPlot.line('time', 'deaths', source=gData, line_color='red')
@@ -73,7 +76,9 @@ color_mapper2 = LogColorMapper(palette=palette)
 statePlot = figure(title="Coronavirus map", tools=TOOLS,
                 x_axis_location=None, y_axis_location=None,
                 tooltips=[('name','@name'),("value", "@val"), ("(Long, Lat)", "($x, $y)"), ('State', '@state')],
-                   height=300)
+                   height=400, width=400)
+statePlot.toolbar.active_scroll=TOOLS[1]
+
 
 statePlot.grid.grid_line_color = None
 statePlot.hover.point_policy = "follow_mouse"
@@ -120,11 +125,14 @@ def updateState():
         confirmed=statesDF[state].confirmed[0:lenTime],
         recovered=statesDF[state].recovered[0:lenTime],
         deaths=statesDF[state].deaths[0:lenTime])
+    yrange = [np.nanmin(stateBorders[state]['lats']), np.nanmax(stateBorders[state]['lats'])]
+    xrange = [np.nanmin(stateBorders[state]['lons']), np.nanmax(stateBorders[state]['lons'])]
+    plotRange = np.diff(xrange)[0] if np.diff(xrange) > np.diff(yrange) else np.diff(yrange)[0]
 
-    # statePlot.x_range.start = -125
-    # statePlot.x_range.end = -65
-    # statePlot.y_range.start = 23
-    # statePlot.y_range.end = 50
+    statePlot.x_range.start = xrange[0]-.05*plotRange
+    statePlot.x_range.end = xrange[0]+1.05*plotRange
+    statePlot.y_range.start = yrange[0]-.05*plotRange
+    statePlot.y_range.end = yrange[0]+1.05*plotRange
 
     graphPlot.title.text = stateBorders[state]['name']
     statePlot.title.text = stateBorders[state]['name']
@@ -146,6 +154,7 @@ usPlot.hover.point_policy = "follow_mouse"
 usPlot.patches('x', 'y', source=usData,
                fill_color={'field': 'val', 'transform': color_mapper},
                fill_alpha=0.7, line_color="white", line_width=0.5)
+usPlot.toolbar.active_scroll=TOOLS[1]
 
 def us_tap_handler(attr, old, new):
     global state
