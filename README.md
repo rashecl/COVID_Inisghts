@@ -1,4 +1,4 @@
-# COVID_Inisghts
+# COVID_Insights
 Currently you can see the number of cases in each state if you run US_coronavirus_map.py.
 (You would have to install bokeh.) 
 
