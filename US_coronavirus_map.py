@@ -9,11 +9,11 @@ from bokeh.palettes import RdYlBu10 as palette
 from bokeh.plotting import figure
 from COVID.extract import JHU
 # from COVID import us_map
-from random import random as rand
 import pandas as pd
 import pickle
 
-DataSelectButtons = CheckboxGroup(labels=["Cases of Coronavirus", "Restaurant Dining", "Employment rates"], active=[0])
+
+DataSelectButtons = CheckboxGroup(labels=["Cases of COVID-19", "Car traffic", "Unemployment rates", "Restaurant Dining", "others"], active=[0])
 
 [stateBorders, countyBorders] = pickle.load(open("./COVID/extract/regionBorders.p", "rb"))
 
@@ -165,6 +165,7 @@ def us_tap_handler(attr, old, new):
         state = stateBorders.columns[new[0]]
         print(state)
         updateState()
+        stateData.selected.indices = []
     return
 
 def state_tap(attr, old, new):
