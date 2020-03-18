@@ -1,6 +1,7 @@
 from bokeh.sampledata.us_states import data as stateBorders
 from bokeh.sampledata.us_counties import data as counties
 import pandas as pd
+import pickle
 
 # stateBorders['D.C.'] = stateBorders.pop('DC')
 stateBorders= pd.DataFrame(stateBorders)  # This contains boundaries for each state
@@ -17,3 +18,5 @@ for code, county in counties.items():
                     'state': state,
                     'lats': lats,
                     'lons': lons}, ignore_index=True)
+
+pickle.dump([stateBorders, countyBorders], open("./extract/regionBorders.p", "wb"))

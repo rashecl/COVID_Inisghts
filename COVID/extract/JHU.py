@@ -5,7 +5,7 @@ https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data
 import pandas as pd
 import numpy as np
 import matplotlib.path as mpltPath
-from COVID import us_map
+# from COVID import us_map
 import pickle
 
 import matplotlib.pyplot as plt
@@ -54,12 +54,14 @@ def getUS_DF(url):
 confirmed = getUS_DF(urls[0])
 recovered = getUS_DF(urls[1])
 deaths = getUS_DF(urls[2])
+timeLen = np.min([confirmed.shape[1]-4, recovered.shape[1]-4, deaths.shape[1]-4])
 time = pd.to_datetime(list(deaths.columns[4::]))
 
-countyBorders = us_map.countyBorders
+[stateBorders, countyBorders] = pickle.load(open("./COVID/extract/regionBorders.p", "rb"))
+# countyBorders = us_map.countyBorders
 # [coord_countykeys] = pickle.load(open("coord_countykeys.p", "rb"))
 [coord_countykeys] = pickle.load(open("./COVID/extract/coord_countykeys.p", "rb"))
-
+# print(countyBorders.columns)
 def getCounty(lon, lat, state):
     global coord_countykeys
     if (lon,lat) in coord_countykeys.keys():
@@ -97,9 +99,9 @@ def getState_RegionalDF(confirmed = confirmed, recovered = recovered , deaths = 
             state_name = loc[0]
             state_idx = state_names.index(loc[0])
             state = state_abbrevs[state_idx]
-            confirmed_t = confirmed.iloc[idx, 4:len(time)+3].ravel()
-            recovered_t = recovered.iloc[idx, 4:len(time)+3].ravel()
-            deaths_t = deaths.iloc[idx, 4:len(time)+3].ravel()
+            confirmed_t = confirmed.iloc[idx, 4:timeLen+3].ravel()
+            recovered_t = recovered.iloc[idx, 4:timeLen+3].ravel()
+            deaths_t = deaths.iloc[idx, 4:timeLen+3].ravel()
             if np.any([np.isnan(confirmed_t[-1]), np.isnan(recovered_t[-1]), np.isnan(deaths_t[-1])]):
                 lastIdx = np.min([len(confirmed_t), len(recovered_t), len(deaths_t)]) - 1
             else:
@@ -118,9 +120,9 @@ def getState_RegionalDF(confirmed = confirmed, recovered = recovered , deaths = 
                 state_idx = state_abbrevs.index(loc[1])
                 state_name = state_names[state_idx]
                 state = state_abbrevs[state_idx]
-                confirmed_t = confirmed.iloc[idx, 4:len(time)+3].ravel()
-                recovered_t = recovered.iloc[idx, 4:len(time)+3].ravel()
-                deaths_t = deaths.iloc[idx, 4:len(time)+3].ravel()
+                confirmed_t = confirmed.iloc[idx, 4:timeLen+3].ravel()
+                recovered_t = recovered.iloc[idx, 4:timeLen+3].ravel()
+                deaths_t = deaths.iloc[idx, 4:timeLen+3].ravel()
                 location_name = loc[0] #loc[0].split(' ')[:-1][0] if loc[0].split(' ')[-1] == 'County' else loc[0]
                 if np.any([np.isnan(confirmed_t[-1]), np.isnan(recovered_t[-1]), np.isnan(deaths_t[-1])]):
                     lastIdx = np.min([len(confirmed_t), len(recovered_t), len(deaths_t)]) - 1
@@ -140,9 +142,9 @@ def getState_RegionalDF(confirmed = confirmed, recovered = recovered , deaths = 
                 state_name = loc[0]
                 state_idx = state_names.index(loc[0])
                 state = state_abbrevs[state_idx]
-                confirmed_t = confirmed.iloc[idx, 4:len(time)+3].ravel()
-                recovered_t = recovered.iloc[idx, 4:len(time)+3].ravel()
-                deaths_t = deaths.iloc[idx, 4:len(time)+3].ravel()
+                confirmed_t = confirmed.iloc[idx, 4:timeLen+3].ravel()
+                recovered_t = recovered.iloc[idx, 4:timeLen+3].ravel()
+                deaths_t = deaths.iloc[idx, 4:timeLen+3].ravel()
                 if np.any([np.isnan(confirmed_t[-1]), np.isnan(recovered_t[-1]), np.isnan(deaths_t[-1])]):
                     lastIdx = np.min([len(confirmed_t), len(recovered_t), len(deaths_t)]) - 1
                 else:
@@ -208,7 +210,6 @@ def mergeStatesDF(states_regionsDF = getState_RegionalDF(), time = time):
                             'time': time}})],
                            axis=1)
     return df
-
 
 def getStateDF():
     """

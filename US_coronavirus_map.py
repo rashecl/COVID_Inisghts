@@ -8,14 +8,14 @@ from bokeh.models import LogColorMapper, LinearColorMapper, HoverTool, ColumnDat
 from bokeh.palettes import RdYlBu11 as palette
 from bokeh.plotting import figure
 from COVID.extract import JHU
-from COVID import us_map
+# from COVID import us_map
 from random import random as rand
 import pandas as pd
+import pickle
 
 DataSelectButtons = CheckboxGroup(labels=["Cases of Coronavirus", "Restaurant Dining", "Employment rates"], active=[0])
 
-stateBorders = us_map.stateBorders
-countyBorders = us_map.countyBorders
+[stateBorders, countyBorders] = pickle.load(open("./COVID/extract/regionBorders.p", "rb"))
 
 statesDF = JHU.getStateDF()
 state_regionalDF = JHU.getState_RegionalDF()
