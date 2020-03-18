@@ -16,7 +16,7 @@ import pandas as pd
 import pickle
 
 
-DataSelectButtons = CheckboxGroup(labels=["Cases of COVID-19", "Car traffic", "Unemployment rates", "Restaurant Dining", "others"], active=[0])
+DataSelectButtons = CheckboxGroup(labels=["Cases of COVID-19", "Coronavirus testing", "Car traffic", "Unemployment rates", "Restaurant Dining", "others"], active=[0])
 
 [stateBorders, countyBorders] = pickle.load(open("./COVID/extract/regionBorders.p", "rb"))
 
@@ -170,6 +170,7 @@ def us_tap_handler(attr, old, new):
             confirmed=countriesDF['US'].confirmed,
             recovered=countriesDF['US'].recovered,
             deaths=countriesDF['US'].deaths)
+
     else:
         state = stateBorders.columns[new[0]]
         print(state)
