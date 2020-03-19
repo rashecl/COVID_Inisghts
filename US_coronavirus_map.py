@@ -14,7 +14,7 @@ import pandas as pd
 import pickle
 
 
-DataSelectButtons = CheckboxGroup(labels=["Cases of COVID-19", "More to come...", "like testing", "and what you suggest"], active=[0])
+DataSelectButtons = CheckboxGroup(labels=["Cases of coronavirus", "More to come...", "Like testing...", "and other suggestions..."], active=[0])
 
 [stateBorders, countyBorders] = pickle.load(open("./COVID/extract/regionBorders.p", "rb"))
 
@@ -24,8 +24,8 @@ state_regionalDF = JHU.getState_RegionalDF()
 countyDF = JHU.getCountiesDF()
 
 # palette = tuple(palette)
-# palette = tuple([all_palettes['Turbo'][256][idx] for idx in range(0,256,5)])
-palette = tuple(all_palettes['Turbo'][256])
+palette = tuple([all_palettes['Turbo'][256][idx] for idx in range(50,256)])
+# palette = tuple(all_palettes['Turbo'][256])
 
 state_xs = [stateBorders[state]["lons"] for state in stateBorders if state]
 state_ys = [stateBorders[state]["lats"] for state in stateBorders if state]
@@ -71,7 +71,7 @@ graphPlot.xaxis.axis_label = 'Date'
 stateData = ColumnDataSource(data={'x': [], 'y': [], 'name': [], 'val': [], 'state': []})
 
 color_mapper = LinearColorMapper(palette=palette)
-color_mapper2 = LinearColorMapper(palette=palette)
+# color_mapper2 = LinearColorMapper(palette=palette)
 
 statePlot = figure(title="Coronavirus map", tools=TOOLS,
                 x_axis_location=None, y_axis_location=None,
