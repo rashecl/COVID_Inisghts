@@ -5,7 +5,7 @@ from bokeh.io import show
 from bokeh.layouts import column, row
 from bokeh.io import curdoc
 from bokeh.models import LogColorMapper, LinearColorMapper, HoverTool, ColumnDataSource, CheckboxGroup
-from bokeh.models import WheelZoomTool, TapTool, SaveTool, ResetTool, PanTool, HoverTool
+from bokeh.models import WheelZoomTool, TapTool, SaveTool, ResetTool, PanTool, HoverTool, Range1d
 from bokeh.palettes import RdYlBu10 as palette, all_palettes
 from bokeh.plotting import figure
 from COVID.extract import JHU
@@ -25,41 +25,49 @@ countyDF = JHU.getCountiesDF()
 
 # palette = tuple(palette)
 palette = tuple([all_palettes['Turbo'][256][idx] for idx in range(50,256)])
+color_mapper = LinearColorMapper(palette=palette)
+
 # palette = tuple(all_palettes['Turbo'][256])
 
-state_xs = [stateBorders[state]["lons"] for state in stateBorders if state]
-state_ys = [stateBorders[state]["lats"] for state in stateBorders if state]
+TOOLS1 = [PanTool(), WheelZoomTool(), TapTool(), HoverTool(), ResetTool(), SaveTool()]
+TOOLS2 = [PanTool(), WheelZoomTool(), TapTool(), HoverTool(), ResetTool(), SaveTool()]
+TOOLS3 = [PanTool(), WheelZoomTool(), HoverTool(), ResetTool(), SaveTool()]
+""" Define data and plot structures for the following plots:
+1) Map of US
+2) Map of state
+3) Graph showing temporal trends
+"""
+# 1) Map of US
+usData = ColumnDataSource(data=dict(x=[], y=[], val=[], state=[]))
+usPlot = figure(title="Cases of Coronavirus", tools=TOOLS1,
+                x_axis_location=None, y_axis_location=None,
+                tooltips=[("value", "@val"), ("(Long, Lat)", "($x, $y)"), ('State', '@state')],
+                width=60 * 15, height=27 * 15)
+usPlot.grid.grid_line_color = None
+usPlot.x_range = Range1d(-125, -65, bounds= 'auto')
+usPlot.y_range = Range1d(23, 50, bounds = 'auto')
+usPlot.hover.point_policy = "follow_mouse"
+usPlot.patches('x', 'y', source=usData,
+               fill_color={'field': 'val', 'transform': color_mapper},
+               fill_alpha=0.7, line_color="white", line_width=0.5)
+usPlot.toolbar.active_scroll=TOOLS1[1]
 
-state_names = [stateBorders[state]["name"] for state in stateBorders]
-# state_names = [county['state'] for county in counties.values()]
+# 2) Map of state
+stateData = ColumnDataSource(data={'x': [], 'y': [], 'name': [], 'val': [], 'state': []})
+statePlot = figure(title="Coronavirus map", tools=TOOLS2,
+                x_axis_location=None, y_axis_location=None,
+                tooltips=[('name','@name'),("value", "@val"), ("(Long, Lat)", "($x, $y)"), ('State', '@state')],
+                   height=400, width=400)
+statePlot.toolbar.active_scroll=TOOLS2[1]
+statePlot.grid.grid_line_color = None
+statePlot.hover.point_policy = "follow_mouse"
+statePlot.patches('x', 'y', source=stateData,
+               fill_color={'field': 'val', 'transform': color_mapper},
+               fill_alpha=0.7, line_color="white", line_width=0.5)
 
-state_val = []
-for state in stateBorders:
-    if (state in statesDF.columns):
-        state_val.append(np.max(statesDF[state].confirmed))
-    else:
-        print(state + ' does not have any records of cases')
-        state_val.append(0)
-
-# color_mapper = LinearColorMapper(palette=palette)
-
-usData = ColumnDataSource(data = dict(
-    x=state_xs,
-    y=state_ys,
-    val=state_val,
-    state=state_names))
-
-gData = ColumnDataSource(data=dict(
-    date=countriesDF['US'].time.astype(str),
-    time=countriesDF['US'].time,
-    confirmed=countriesDF['US'].confirmed,
-    recovered=countriesDF['US'].recovered,
-    deaths=countriesDF['US'].deaths))
-
-TOOLS = [PanTool(), WheelZoomTool(), TapTool(), HoverTool(), ResetTool(), SaveTool()]
-# TOOLS2 = "pan,wheel_zoom,reset,save"
-TOOLS2 = [PanTool(), WheelZoomTool(), HoverTool(), ResetTool(), SaveTool()]
-graphPlot = figure(tools=TOOLS2, x_axis_type='datetime', tooltips=[
+# 3) Graph of temporal variables
+gData = ColumnDataSource(data=dict(date=[], time=[], confirmed=[], recovered=[], deaths=[]))
+graphPlot = figure(tools=TOOLS3, x_axis_type='datetime', tooltips=[
                ("Date", "@date"), ("confirmed", "@confirmed"), ('recovered', '@recovered'), ('died', '@deaths')
            ], width=500, height=400)
 graphPlot.line('time', 'confirmed', source=gData, line_color='black')
@@ -68,27 +76,21 @@ graphPlot.line('time', 'deaths', source=gData, line_color='red')
 graphPlot.yaxis.axis_label = '# of people'
 graphPlot.xaxis.axis_label = 'Date'
 
-stateData = ColumnDataSource(data={'x': [], 'y': [], 'name': [], 'val': [], 'state': []})
+""" Not it's time to define the actual data"""
+# 1) Define actual data for US map:
+state_xs = [stateBorders[state]["lons"] for state in stateBorders if state]
+state_ys = [stateBorders[state]["lats"] for state in stateBorders if state]
+state_names = [stateBorders[state]["name"] for state in stateBorders]
+state_val = []
+for state in stateBorders:
+    if (state in statesDF.columns):
+        state_val.append(np.max(statesDF[state].confirmed))
+    else:
+        print(state + ' does not have any records of cases')
+        state_val.append(0)
+usData.data=dict(x=state_xs, y=state_ys, val=state_val, state=state_names)
 
-color_mapper = LinearColorMapper(palette=palette)
-# color_mapper2 = LinearColorMapper(palette=palette)
-
-statePlot = figure(title="Coronavirus map", tools=TOOLS,
-                x_axis_location=None, y_axis_location=None,
-                tooltips=[('name','@name'),("value", "@val"), ("(Long, Lat)", "($x, $y)"), ('State', '@state')],
-                   height=400, width=400)
-statePlot.toolbar.active_scroll=TOOLS[1]
-
-
-statePlot.grid.grid_line_color = None
-statePlot.hover.point_policy = "follow_mouse"
-statePlot.patches('x', 'y', source=stateData,
-               fill_color={'field': 'val', 'transform': color_mapper},
-               fill_alpha=0.7, line_color="white", line_width=0.5)
-
-state = 'CA'
-stateCountyDF = pd.DataFrame()
-
+# 2) Define data for state map
 def updateState():
     global stateCountyDF, state
     print(state)
@@ -128,34 +130,30 @@ def updateState():
     yrange = [np.nanmin(stateBorders[state]['lats']), np.nanmax(stateBorders[state]['lats'])]
     xrange = [np.nanmin(stateBorders[state]['lons']), np.nanmax(stateBorders[state]['lons'])]
     plotRange = np.diff(xrange)[0] if np.diff(xrange) > np.diff(yrange) else np.diff(yrange)[0]
-
-    statePlot.x_range.start = xrange[0]-.05*plotRange
-    statePlot.x_range.end = xrange[0]+1.05*plotRange
-    statePlot.y_range.start = yrange[0]-.05*plotRange
-    statePlot.y_range.end = yrange[0]+1.05*plotRange
+    # statePlot.x_range = Range1d(xrange[0]-.05*plotRange, xrange[0]+1.05*plotRange)
+    statePlot.x_range.start = (xrange[0] + plotRange/2) -.55*plotRange
+    statePlot.x_range.end = (xrange[0] + plotRange/2) +.55*plotRange
+    # statePlot.y_range = Range1d(yrange[0]-.05*plotRange, yrange[0]+1.05*plotRange)
+    statePlot.y_range.start = (yrange[0] + plotRange/2) -.55*plotRange
+    statePlot.y_range.end = (yrange[0] + plotRange/2) +.55*plotRange
 
     graphPlot.title.text = stateBorders[state]['name']
     statePlot.title.text = stateBorders[state]['name']
     return
-
+# stateCountyDF = pd.DataFrame()
+state = 'CA'
 updateState()
 
-usPlot = figure(title="Cases of Coronavirus", tools=TOOLS,
-                x_axis_location=None, y_axis_location=None,
-                tooltips=[("value", "@val"), ("(Long, Lat)", "($x, $y)"), ('State', '@state')],
-                width=60 * 15, height=27 * 15)
-usPlot.grid.grid_line_color = None
-usPlot.x_range.start = -125
-usPlot.x_range.end = -65
-usPlot.y_range.start = 23
-usPlot.y_range.end = 50
-usPlot.hover.point_policy = "follow_mouse"
+# 3) Define data for graph:
+# Show US data to start
+gData.data = dict(date=countriesDF['US'].time.astype(str),
+    time=countriesDF['US'].time,
+    confirmed=countriesDF['US'].confirmed,
+    recovered=countriesDF['US'].recovered,
+    deaths=countriesDF['US'].deaths)
+graphPlot.title.text = 'United States'
 
-usPlot.patches('x', 'y', source=usData,
-               fill_color={'field': 'val', 'transform': color_mapper},
-               fill_alpha=0.7, line_color="white", line_width=0.5)
-usPlot.toolbar.active_scroll=TOOLS[1]
-
+""" Define interactivity functions"""
 def us_tap_handler(attr, old, new):
     global state
     # index = new[0]
@@ -163,7 +161,7 @@ def us_tap_handler(attr, old, new):
     # print([x for x in list(locals().keys()) if x[0] != '_'])
     if len(new) == 0:
         print('US')
-        graphPlot.title.text = 'US'
+        graphPlot.title.text = 'United States'
         gData.data = dict(
             date=countriesDF['US'].time.astype(str),
             time=countriesDF['US'].time,
@@ -223,7 +221,6 @@ def state_tap(attr, old, new):
 
 usData.selected.on_change("indices", us_tap_handler)
 stateData.selected.on_change("indices", state_tap)
-
 
 layout = column(row(usPlot, DataSelectButtons), row(graphPlot, statePlot))
 # show(layout)
