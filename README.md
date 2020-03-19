@@ -14,3 +14,9 @@ from matplotlib import pyplot as plt <br>
 plt.plot(statesDF['CA'].time, statesDF['CA'].confirmed) <br>
 plt.show()<br>
 
+# Other resources:
+https://www.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6
+https://covidtracking.com/
+https://covidly.com/
+https://nextstrain.org/ncov?m=div
+
