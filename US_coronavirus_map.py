@@ -6,7 +6,7 @@ from bokeh.layouts import column, row
 from bokeh.io import curdoc
 from bokeh.models import LogColorMapper, LinearColorMapper, HoverTool, ColumnDataSource, CheckboxGroup
 from bokeh.models import WheelZoomTool, TapTool, SaveTool, ResetTool, PanTool, HoverTool
-from bokeh.palettes import RdYlBu10 as palette
+from bokeh.palettes import RdYlBu10 as palette, all_palettes
 from bokeh.plotting import figure
 from COVID.extract import JHU
 # from COVID import us_map
@@ -23,7 +23,9 @@ statesDF = JHU.getStateDF()
 state_regionalDF = JHU.getState_RegionalDF()
 countyDF = JHU.getCountiesDF()
 
-palette = tuple(palette)
+# palette = tuple(palette)
+# palette = tuple([all_palettes['Turbo'][256][idx] for idx in range(0,256,5)])
+palette = tuple(all_palettes['Turbo'][256])
 
 state_xs = [stateBorders[state]["lons"] for state in stateBorders if state]
 state_ys = [stateBorders[state]["lats"] for state in stateBorders if state]
@@ -69,7 +71,7 @@ graphPlot.xaxis.axis_label = 'Date'
 stateData = ColumnDataSource(data={'x': [], 'y': [], 'name': [], 'val': [], 'state': []})
 
 color_mapper = LinearColorMapper(palette=palette)
-color_mapper2 = LogColorMapper(palette=palette)
+color_mapper2 = LinearColorMapper(palette=palette)
 
 statePlot = figure(title="Coronavirus map", tools=TOOLS,
                 x_axis_location=None, y_axis_location=None,
