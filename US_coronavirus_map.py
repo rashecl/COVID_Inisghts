@@ -6,8 +6,6 @@ from bokeh.layouts import column, row
 from bokeh.io import curdoc
 from bokeh.models import LogColorMapper, LinearColorMapper, HoverTool, ColumnDataSource, CheckboxGroup
 from bokeh.models import WheelZoomTool, TapTool, SaveTool, ResetTool, PanTool, HoverTool
-
-
 from bokeh.palettes import RdYlBu10 as palette
 from bokeh.plotting import figure
 from COVID.extract import JHU
@@ -16,13 +14,13 @@ import pandas as pd
 import pickle
 
 
-DataSelectButtons = CheckboxGroup(labels=["Cases of COVID-19", "Coronavirus testing", "Car traffic", "Unemployment rates", "Restaurant Dining", "others"], active=[0])
+DataSelectButtons = CheckboxGroup(labels=["Cases of COVID-19", "More to come...", "like testing", "and what you suggest"], active=[0])
 
 [stateBorders, countyBorders] = pickle.load(open("./COVID/extract/regionBorders.p", "rb"))
 
+countriesDF = JHU.getCountriesDF()
 statesDF = JHU.getStateDF()
 state_regionalDF = JHU.getState_RegionalDF()
-countriesDF = JHU.getCountriesDF()
 countyDF = JHU.getCountiesDF()
 
 palette = tuple(palette)
@@ -230,7 +228,7 @@ layout = column(row(usPlot, DataSelectButtons), row(graphPlot, statePlot))
 
 #
 doc = curdoc()
-doc.title = "Coronavirus Forecaster"
+doc.title = "US Coronavirus Map"
 doc.add_root(layout)
 # # Run this in the command line:
 
