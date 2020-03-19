@@ -130,12 +130,12 @@ def updateState():
     yrange = [np.nanmin(stateBorders[state]['lats']), np.nanmax(stateBorders[state]['lats'])]
     xrange = [np.nanmin(stateBorders[state]['lons']), np.nanmax(stateBorders[state]['lons'])]
     plotRange = np.diff(xrange)[0] if np.diff(xrange) > np.diff(yrange) else np.diff(yrange)[0]
-    # statePlot.x_range = Range1d(xrange[0]-.05*plotRange, xrange[0]+1.05*plotRange)
-    statePlot.x_range.start = (xrange[0] + plotRange/2) -.55*plotRange
-    statePlot.x_range.end = (xrange[0] + plotRange/2) +.55*plotRange
-    # statePlot.y_range = Range1d(yrange[0]-.05*plotRange, yrange[0]+1.05*plotRange)
-    statePlot.y_range.start = (yrange[0] + plotRange/2) -.55*plotRange
-    statePlot.y_range.end = (yrange[0] + plotRange/2) +.55*plotRange
+    # statePlot.x_range = Range1d((xrange[0] + plotRange/2) -.55*plotRange, (xrange[0] + plotRange/2) +.55*plotRange, bounds = ((xrange[0] + plotRange/2) -.55*plotRange, (xrange[0] + plotRange/2) +.55*plotRange))
+    statePlot.x_range.start = np.average(xrange) -.55*plotRange
+    statePlot.x_range.end = np.average(xrange) +.55*plotRange
+    # statePlot.y_range = Range1d((yrange[0] + plotRange/2) -.55*plotRange, (yrange[0] + plotRange/2) +.55*plotRange, bounds = ((yrange[0] + plotRange/2) -.55*plotRange, (yrange[0] + plotRange/2) +.55*plotRange))
+    statePlot.y_range.start = np.average(yrange) -.55*plotRange
+    statePlot.y_range.end = np.average(yrange) +.55*plotRange
 
     graphPlot.title.text = stateBorders[state]['name']
     statePlot.title.text = stateBorders[state]['name']
@@ -168,12 +168,13 @@ def us_tap_handler(attr, old, new):
             confirmed=countriesDF['US'].confirmed,
             recovered=countriesDF['US'].recovered,
             deaths=countriesDF['US'].deaths)
-
     else:
         state = stateBorders.columns[new[0]]
         print(state)
         updateState()
         stateData.selected.indices = []
+
+
     return
 
 def state_tap(attr, old, new):
