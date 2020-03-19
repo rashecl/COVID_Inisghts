@@ -70,11 +70,13 @@ gData = ColumnDataSource(data=dict(date=[], time=[], confirmed=[], recovered=[],
 graphPlot = figure(tools=TOOLS3, x_axis_type='datetime', tooltips=[
                ("Date", "@date"), ("confirmed", "@confirmed"), ('recovered', '@recovered'), ('died', '@deaths')
            ], width=500, height=400)
-graphPlot.line('time', 'confirmed', source=gData, line_color='black')
-graphPlot.line('time', 'recovered', source=gData, line_color='green')
-graphPlot.line('time', 'deaths', source=gData, line_color='red')
+graphPlot.line('time', 'confirmed', source=gData, line_color='black', line_width=2, legend_label='confirmed')
+graphPlot.line('time', 'recovered', source=gData, line_color='green', line_width=2, legend_label='recovered')
+graphPlot.line('time', 'deaths', source=gData, line_color='red', line_width=2, legend_label='deaths')
 graphPlot.yaxis.axis_label = '# of people'
 graphPlot.xaxis.axis_label = 'Date'
+graphPlot.legend.location = "top_left"
+graphPlot.legend.click_policy = "hide"
 
 """ Not it's time to define the actual data"""
 # 1) Define actual data for US map:
