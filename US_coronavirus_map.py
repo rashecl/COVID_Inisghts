@@ -44,8 +44,8 @@ usPlot = figure(title="Cases of Coronavirus", tools=TOOLS1,
                 tooltips=[("value", "@val"), ("(Long, Lat)", "($x, $y)"), ('State', '@state')],
                 width=60 * 15, height=27 * 15)
 usPlot.grid.grid_line_color = None
-usPlot.x_range = Range1d(-125, -65, bounds=(-150, -30))
-usPlot.y_range = Range1d(23, 50, bounds = (15, 75))
+usPlot.x_range = Range1d(-125, -65, bounds=(-145, -45))
+usPlot.y_range = Range1d(23, 50, bounds = (13, 60))
 usPlot.hover.point_policy = "follow_mouse"
 usPlot.patches('x', 'y', source=usData,
                fill_color={'field': 'val', 'transform': color_mapper},
