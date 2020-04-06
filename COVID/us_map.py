@@ -8,13 +8,14 @@ stateBorders= pd.DataFrame(stateBorders)  # This contains boundaries for each st
 # excludeStates = ['AK', 'HI'] # Exclude the states
 stateBorders = stateBorders.drop(columns=['AK', 'HI'])
 
-countyBorders = pd.DataFrame(columns = ['county_name', 'state', 'lats', 'lons'])
+countyBorders = pd.DataFrame(columns = ['county', 'state', 'lats', 'lons'])
 for code, county in counties.items():
-    county_name = county['detailed name'].split(', ')[0]
+    # county_name = county['detailed name'].split(', ')[0]
+    county_name = county['name']
     state=county['state'].upper()
     lats=county['lats']
     lons=county['lons']
-    countyBorders = countyBorders.append({'county_name': county_name,
+    countyBorders = countyBorders.append({'county': county_name,
                     'state': state,
                     'lats': lats,
                     'lons': lons}, ignore_index=True)
