@@ -5,8 +5,9 @@ import numpy as np
 from bokeh.io import show
 from bokeh.layouts import column, row
 from bokeh.io import curdoc
-from bokeh.models import LogColorMapper, LinearColorMapper, HoverTool, ColumnDataSource, CheckboxGroup, Div
+from bokeh.models import LogColorMapper, LinearColorMapper, ColorBar, ColumnDataSource, LogTicker, CheckboxGroup, Div
 from bokeh.models import WheelZoomTool, TapTool, SaveTool, ResetTool, PanTool, HoverTool, Range1d, BoxZoomTool
+from bokeh.models import TickFormatter
 from bokeh.palettes import RdYlBu10 as palette, all_palettes
 from bokeh.plotting import figure
 from COVID.extract import COVID_counts
@@ -14,12 +15,14 @@ import pandas as pd
 import pickle
 
 [stateBorders, countyBorders] = pickle.load(open("./COVID/extract/regionBorders.p", "rb"))
+[usPopulation, statePopulations, countyPopulations] = pickle.load(open("./COVID/extract/regionPopulations.p", "rb"))
 [countyDF, stateDF_NYT, stateDF_CT, usDF_NYT, usDF_CT, lastUpdate] = pickle.load(
     open("./COVID/extract/CovidCounts.p", "rb"))
 
 # palette = tuple(palette)
 palette = tuple([all_palettes['Turbo'][256][idx] for idx in range(50, 256)])
-color_mapper = LinearColorMapper(palette=palette)
+# color_mapper = LinearColorMapper(palette=palette)
+color_mapper = LogColorMapper(palette=palette, low=1, high=200000)
 
 us_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), TapTool(), HoverTool(), ResetTool()]
 state_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), TapTool(), HoverTool(), ResetTool()]
@@ -28,16 +31,8 @@ daily_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), ResetTool(), SaveTool(
 cumulCritical_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), ResetTool(), SaveTool()]
 dailyCritical_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), ResetTool(), SaveTool()]
 
-""" Define data and plot structures for the following plots:
-1) Map of US
-# usData
-2) Map of state
-# stateData
-3) Cumulative temporal graph
-4) Cumulative critical graph
-5) Daily temporal graph
-6) Daily critical graph
-"""
+# A) Define data and plot structures
+
 # 1) Map of US
 usData = ColumnDataSource(data=dict(x=[], y=[], cases=[], state=[]))
 usPlot = figure(title="Cases of Coronavirus", tools=us_TOOLS,
@@ -52,9 +47,16 @@ usPlot.hover.point_policy = "follow_mouse"
 usPlot.patches('x', 'y', source=usData,
                fill_color={'field': 'cases', 'transform': color_mapper},
                fill_alpha=0.7, line_color="white", line_width=0.5)
-
 usPlot.toolbar.active_drag = us_TOOLS[0]
+tick_labels = {'0': '0', '1':'1', '10': '10',
+ '100':'100', '1000':'1000',
+ '10000':'10,000', '100000':'100,000'}
 
+us_color_bar = ColorBar(color_mapper=color_mapper, ticker=LogTicker(),
+                        label_standoff=12, border_line_color=None, orientation='horizontal', location=(0,0),
+                        major_label_overrides=tick_labels)
+usPlot.add_layout(us_color_bar, 'below')
+# usColorBar.right[0].formatter.use_scientific = False
 # 2) Map of state
 stateData = ColumnDataSource(data={'x': [], 'y': [], 'name': [], 'cases': [], 'state': []})
 statePlot = figure(title="Coronavirus map", tools=state_TOOLS,
@@ -67,61 +69,52 @@ statePlot.hover.point_policy = "follow_mouse"
 statePlot.patches('x', 'y', source=stateData,
                   fill_color={'field': 'cases', 'transform': color_mapper},
                   fill_alpha=0.7, line_color="white", line_width=0.5)
-
-# 3) Cumulative of temporal plots (tests, positive):
+# 3,4) Cumulative temporal graphs (tests, positive):
 cumulativeData_CT = ColumnDataSource(data=dict(time=[], date=[], total_positive=[], total_testResults=[],
                                                total_hospitalized=[], total_ICU=[], total_deaths=[], source=[]))
-
 cumulativeData_NYT = ColumnDataSource(data=dict(time=[], date=[], total_positive=[], total_deaths=[], source=[]))
-
 cumulPlot = figure(tools=cumul_TOOLS, x_axis_type='datetime', width=650, height=250)
+cumulPlot.left[0].formatter.use_scientific = False
 total_positive_CT = cumulPlot.line('time', 'total_positive', source=cumulativeData_CT, line_color='blue', line_width=2,
                                    legend_label='positive_CT')
 total_positive_NYT = cumulPlot.line('time', 'total_positive', source=cumulativeData_NYT, line_color='lightblue', line_width=2,
                                     legend_label='positive_NYT')
 total_testResults = cumulPlot.line('time', 'total_testResults', source=cumulativeData_CT, line_color='green', line_width=2,
                                    legend_label='total_testResults')
-
 # total_positive_NYT.visible = False
-
 cumulPlot.yaxis.axis_label = '# of people'
 cumulPlot.xaxis.axis_label = 'Date'
 cumulPlot.legend.location = "top_left"
 cumulPlot.legend.click_policy = "hide"
-
 cumulPlot.add_tools(
     HoverTool(renderers=[total_positive_CT], tooltips=[("total_positive", "@total_positive"), ("date", "@date")]))
 cumulPlot.add_tools(
     HoverTool(renderers=[total_positive_NYT], tooltips=[("total_positive", "@total_positive"), ("date", "@date")]))
 cumulPlot.add_tools(
     HoverTool(renderers=[total_testResults], tooltips=[("total_testResults", "@total_testResults"), ("date", "@date")]))
-
 # 4) Cumulative critical cases (deaths for now):
 cumulCriticalPlot = figure(tools=cumulCritical_TOOLS, x_axis_type='datetime', width=650, height=250, x_range=cumulPlot.x_range)
-
+cumulCriticalPlot.left[0].formatter.use_scientific = False
 total_deaths_CT = cumulCriticalPlot.line('time', 'total_deaths', source=cumulativeData_CT, line_color='red', line_width=2,
                                          legend_label='totalDeaths_CT')
 total_deaths_NYT = cumulCriticalPlot.line('time', 'total_deaths', source=cumulativeData_NYT, line_color='magenta',
                                           line_width=2, legend_label='totalDeaths_NYT')
 # total_deaths_NYT.visible = False
-
 cumulCriticalPlot.yaxis.axis_label = '# of people'
 cumulCriticalPlot.xaxis.axis_label = 'Date'
 cumulCriticalPlot.legend.location = "top_left"
 cumulCriticalPlot.legend.click_policy = "hide"
-
 cumulCriticalPlot.add_tools(
     HoverTool(renderers=[total_deaths_CT], tooltips=[("total_deaths", "@total_deaths"), ("date", "@date")]))
 cumulCriticalPlot.add_tools(
     HoverTool(renderers=[total_deaths_NYT], tooltips=[("total_deaths", "@total_deaths"), ("date", "@date")]))
-
-# 5) Daily temporal graphs:
+# 5-6) Daily temporal graphs:
 dailyData_CT = ColumnDataSource(data=dict(time=[], date=[], new_positive=[], new_testResults=[],
                                           current_hospitalized=[], current_ICU=[], new_deaths=[], source=[]))
 dailyData_NYT = ColumnDataSource(data=dict(time=[], date=[], new_positive=[], new_deaths=[], source=[]))
 
 dailyPlot = figure(tools=daily_TOOLS, x_axis_type='datetime', width=650, height=250, title="Daily statistics", x_range=cumulPlot.x_range)
-
+dailyPlot.left[0].formatter.use_scientific = False
 new_positive_CT = dailyPlot.line('time', 'new_positive', source=dailyData_CT, line_color='blue', line_width=2,
                                  legend_label='new_positive_CT')
 new_testResults = dailyPlot.line('time', 'new_testResults', source=dailyData_CT, line_color='green', line_width=2,
@@ -129,7 +122,6 @@ new_testResults = dailyPlot.line('time', 'new_testResults', source=dailyData_CT,
 new_positive_NYT = dailyPlot.line('time', 'new_positive', source=dailyData_NYT, line_color='lightblue', line_width=2,
                                   legend_label='new_positive_NYT')
 # new_positive_NYT.visible = False
-
 dailyPlot.add_tools(
     HoverTool(renderers=[new_positive_CT], tooltips=[("new_positive", "@new_positive"), ("date", "@date")]))
 dailyPlot.add_tools(
@@ -142,10 +134,11 @@ dailyPlot.yaxis.axis_label = '# of people'
 dailyPlot.xaxis.axis_label = 'Date'
 dailyPlot.legend.location = "top_left"
 dailyPlot.legend.click_policy = "hide"
-
 # 6) dailyCritical plot
 dailyCriticalPlot = figure(tools=dailyCritical_TOOLS, x_axis_type='datetime', width=650, height=250,
                            title="Daily statistics", x_range=cumulPlot.x_range)
+dailyCriticalPlot.left[0].formatter.use_scientific = False
+
 current_hospitalized = dailyCriticalPlot.line('time', 'current_hospitalized', source=dailyData_CT, line_color='orange',
                                               line_width=2, legend_label='current_hospitalized')
 current_ICU = dailyCriticalPlot.line('time', 'current_ICU', source=dailyData_CT, line_color='red', line_width=2,
@@ -154,9 +147,7 @@ new_deaths_CT = dailyCriticalPlot.line('time', 'new_deaths', source=dailyData_CT
                                        legend_label='new_deaths_CT')
 new_deaths_NYT = dailyCriticalPlot.line('time', 'new_deaths', source=dailyData_NYT, line_color='grey', line_width=2,
                                         legend_label='new_deaths_NYT')
-
 # new_deaths_NYT.visible = False
-
 dailyCriticalPlot.add_tools(
     HoverTool(renderers=[new_deaths_CT], tooltips=[("new_deaths", "@new_deaths"), ("date", "@date")]))
 dailyCriticalPlot.add_tools(
@@ -172,8 +163,8 @@ dailyCriticalPlot.xaxis.axis_label = 'Date'
 dailyCriticalPlot.legend.location = "top_left"
 dailyCriticalPlot.legend.click_policy = "hide"
 
-""" Now it's time to define the actual data"""
-# 1) Define actual data for US map:
+# B) Define the actual data for the plots:"""
+# 1) Define data for US map plot:
 state_xs = [stateBorders[state]["lons"] for state in stateBorders if state]
 state_ys = [stateBorders[state]["lats"] for state in stateBorders if state]
 state_names = [stateBorders[state]["name"] for state in stateBorders]
@@ -185,12 +176,9 @@ for state in stateBorders:
         print(state + ' does not have any records of cases')
         state_val.append(0)
 usData.data = dict(x=state_xs, y=state_ys, cases=state_val, state=state_names)
-
-
 # 2) Define data for state map
-
 def updateState():
-    global countyDF, state, stateCountyDF
+    global countyDF, state, stateCountyDF, stateBorders
     print(state)
     stateCountyDF = countyDF.query("state == '" + state + "'")
     stateCountyBorders = countyBorders[countyBorders['state'] == state]
@@ -215,6 +203,8 @@ def updateState():
         state=state_names)
 
     # Set new limits and re-title state plot:
+    print('Setting limits: ' + state)
+
     yrange = [np.nanmin(stateBorders[state]['lats']), np.nanmax(stateBorders[state]['lats'])]
     xrange = [np.nanmin(stateBorders[state]['lons']), np.nanmax(stateBorders[state]['lons'])]
     plotRange = np.diff(xrange)[0] if np.diff(xrange) > np.diff(yrange) else np.diff(yrange)[0]
@@ -267,10 +257,7 @@ def updateState():
         source=NYTdf['source'])
     return
 
-state = 'CA'
-updateState()
-
-# 3) Define data for graph:
+# 3) Define data for temporalgraphs:
 # Show US data to start
 def sourceUSdata():
     global usDF_CT
@@ -352,9 +339,6 @@ def sourceCountyData():
     cumulPlot.title.text = county + ': Cumulative data'
     return
 
-
-
-
 """ Define interactivity functions"""
 
 
@@ -372,7 +356,6 @@ def us_tap_handler(attr, old, new):
         updateState()
         stateData.selected.indices = []
     return
-
 
 def state_tap(attr, old, new):
     global state, stateCountyDF, statesDF, stateBorders, county
@@ -399,7 +382,6 @@ def state_tap(attr, old, new):
         # updateState(state=state)
     return
 
-
 usData.selected.on_change("indices", us_tap_handler)
 stateData.selected.on_change("indices", state_tap)
 
@@ -408,7 +390,6 @@ layout = column(row(usPlot, statePlot),
                 row(cumulCriticalPlot, dailyCriticalPlot))
 # show(layout)
 
-#
 doc = curdoc()
 doc.title = "US Coronavirus Map"
 doc.add_root(layout)
