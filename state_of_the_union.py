@@ -244,6 +244,8 @@ dailyCriticalPlot.xaxis.axis_label = 'Date'
 dailyCriticalPlot.legend.location = "top_left"
 dailyCriticalPlot.legend.click_policy = "hide"
 
+print("Completed defining plot structures")
+
 # B) Define the actual data for the plots:
 # 1) Define data for US map plot:
 state_xs = [stateBorders[state]["lons"] for state in stateBorders if state]
@@ -257,7 +259,7 @@ for state in stateBorders:
         print(state + ' does not have any records of cases')
         state_val.append(0)
 usData.data = dict(x=state_xs, y=state_ys, cases=state_val, state=state_names)
-
+print("Completed defining data")
 # 2) Define function on selection of new state:
 def updateState():
     global countyDF, state, stateCountyDF, stateBorders
