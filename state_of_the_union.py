@@ -492,8 +492,9 @@ stateData.selected.on_change("indices", state_tap)
 layout = column(row(usPlot, statePlot),
                 row(cumulPlot, dailyPlot),
                 row(cumulCriticalPlot, dailyDeathPlot),
-                row(column(Div(text='*Hospitalization statistics may be confounded by the # of states reporting.', width=300),
-                           Div(text='Last updated: ' + str(lastUpdated)[0:16], width=300)), dailyCriticalPlot))
+                row(Div(text='*Hospitalization statistics may be confounded by the # of states reporting. '+ ' \n Last updated: ' + str(lastUpdated)[0:16], width=300,
+                        style={'font-size': '150%', 'color': 'black'}),
+                        dailyCriticalPlot))
 # Initiate with US data:
 sourceUSdata()
 # show(layout)
