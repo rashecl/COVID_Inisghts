@@ -126,7 +126,7 @@ total_deaths_NYT = cumulCriticalPlot.line('time', 'total_deaths', source=cumulat
                                           line_width=2, legend_label='totalDeaths_NYT')
 # total_deaths_NYT.visible = False
 cumulCriticalPlot.yaxis.axis_label = '# of people'
-cumulCriticalPlot.yaxis.formatter = formatter = FuncTickFormatter(code="""
+cumulCriticalPlot.yaxis.formatter= FuncTickFormatter(code="""
     parts = tick.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
@@ -135,11 +135,11 @@ cumulCriticalPlot.xaxis.axis_label = 'Date'
 cumulCriticalPlot.legend.location = "top_left"
 cumulCriticalPlot.legend.click_policy = "hide"
 cumulCriticalPlot.add_tools(
-    HoverTool(renderers=[total_deaths_CT], tooltips=[("total_deaths", "@total_deaths"), ("date", "@time{%F}")],
+    HoverTool(renderers=[total_deaths_CT], tooltips=[("total_deaths", "@total_deaths{(0,00)}"), ("date", "@time{%F}")],
               formatters={'@time': 'datetime'})
 )
 cumulCriticalPlot.add_tools(
-    HoverTool(renderers=[total_deaths_NYT], tooltips=[("total_deaths", "@total_deaths"), ("date", "@time{%F}")],
+    HoverTool(renderers=[total_deaths_NYT], tooltips=[("total_deaths", "@total_deaths{(0,00)}"), ("date", "@time{%F}")],
               formatters={'@time': 'datetime'})
 )
 # 5-7) Daily temporal graphs:
@@ -204,7 +204,7 @@ dailyDeathPlot.add_tools(
 
 dailyDeathPlot.toolbar.active_drag = dailyDeath_TOOLS[1]
 dailyDeathPlot.yaxis.axis_label = '# of people'
-dailyDeathPlot.yaxis.formatter = formatter = FuncTickFormatter(code="""
+dailyDeathPlot.yaxis.formatter = FuncTickFormatter(code="""
     parts = tick.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
@@ -235,7 +235,7 @@ dailyCriticalPlot.add_tools(
 
 dailyCriticalPlot.toolbar.active_drag = dailyCritical_TOOLS[1]
 dailyCriticalPlot.yaxis.axis_label = '# of people'
-dailyCriticalPlot.yaxis.formatter = formatter = FuncTickFormatter(code="""
+dailyCriticalPlot.yaxis.formatter = FuncTickFormatter(code="""
     parts = tick.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
