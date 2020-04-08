@@ -91,7 +91,7 @@ total_testResults = cumulPlot.line('time', 'total_testResults', source=cumulativ
                                    legend_label='total_testResults')
 # total_positive_NYT.visible = False
 cumulPlot.yaxis.axis_label = '# of people'
-cumulPlot.yaxis.formatter = formatter = FuncTickFormatter(code="""
+cumulPlot.yaxis.formatter = FuncTickFormatter(code="""
     parts = tick.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
