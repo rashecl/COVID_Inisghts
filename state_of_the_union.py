@@ -91,11 +91,11 @@ total_testResults = cumulPlot.line('time', 'total_testResults', source=cumulativ
                                    legend_label='total_testResults')
 # total_positive_NYT.visible = False
 cumulPlot.yaxis.axis_label = '# of people'
-cumulPlot.yaxis.formatter = FuncTickFormatter(code="""
-    parts = tick.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-    """)
+# cumulPlot.yaxis.formatter = FuncTickFormatter(code="""
+#     parts = tick.toString().split(".");
+#     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+#     return parts.join(".");
+#     """)
 cumulPlot.xaxis.axis_label = 'Date'
 cumulPlot.legend.location = "top_left"
 cumulPlot.legend.click_policy = "hide"
@@ -126,11 +126,11 @@ total_deaths_NYT = cumulCriticalPlot.line('time', 'total_deaths', source=cumulat
                                           line_width=2, legend_label='totalDeaths_NYT')
 # total_deaths_NYT.visible = False
 cumulCriticalPlot.yaxis.axis_label = '# of people'
-cumulCriticalPlot.yaxis.formatter= FuncTickFormatter(code="""
-    parts = tick.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-    """)
+# cumulCriticalPlot.yaxis.formatter= FuncTickFormatter(code="""
+#     parts = tick.toString().split(".");
+#     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+#     return parts.join(".");
+#     """)
 cumulCriticalPlot.xaxis.axis_label = 'Date'
 cumulCriticalPlot.legend.location = "top_left"
 cumulCriticalPlot.legend.click_policy = "hide"
@@ -174,11 +174,11 @@ dailyPlot.add_tools(
 
 dailyPlot.toolbar.active_drag = daily_TOOLS[1]
 dailyPlot.yaxis.axis_label = '# of people'
-dailyPlot.yaxis.formatter = formatter = FuncTickFormatter(code="""
-    parts = tick.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-    """)
+# dailyPlot.yaxis.formatter = formatter = FuncTickFormatter(code="""
+#     parts = tick.toString().split(".");
+#     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+#     return parts.join(".");
+#     """)
 dailyPlot.xaxis.axis_label = 'Date'
 dailyPlot.legend.location = "top_left"
 dailyPlot.legend.click_policy = "hide"
@@ -204,11 +204,11 @@ dailyDeathPlot.add_tools(
 
 dailyDeathPlot.toolbar.active_drag = dailyDeath_TOOLS[1]
 dailyDeathPlot.yaxis.axis_label = '# of people'
-dailyDeathPlot.yaxis.formatter = FuncTickFormatter(code="""
-    parts = tick.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-    """)
+# dailyDeathPlot.yaxis.formatter = FuncTickFormatter(code="""
+#     parts = tick.toString().split(".");
+#     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+#     return parts.join(".");
+#     """)
 dailyDeathPlot.xaxis.axis_label = 'Date'
 dailyDeathPlot.legend.location = "top_left"
 dailyDeathPlot.legend.click_policy = "hide"
@@ -235,11 +235,11 @@ dailyCriticalPlot.add_tools(
 
 dailyCriticalPlot.toolbar.active_drag = dailyCritical_TOOLS[1]
 dailyCriticalPlot.yaxis.axis_label = '# of people'
-dailyCriticalPlot.yaxis.formatter = FuncTickFormatter(code="""
-    parts = tick.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-    """)
+# dailyCriticalPlot.yaxis.formatter = FuncTickFormatter(code="""
+#     parts = tick.toString().split(".");
+#     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+#     return parts.join(".");
+#     """)
 dailyCriticalPlot.xaxis.axis_label = 'Date'
 dailyCriticalPlot.legend.location = "top_left"
 dailyCriticalPlot.legend.click_policy = "hide"
