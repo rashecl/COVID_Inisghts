@@ -19,6 +19,7 @@ import pickle
 [usPopulation, statePopulations, countyPopulations] = pickle.load(open("./COVID/extract/regionPopulations.p", "rb"))
 [countyDF, stateDF_NYT, stateDF_CT, usDF_NYT, usDF_CT, lastUpdated] = pickle.load(
     open("./COVID/extract/CovidCounts.p", "rb"))
+print(lastUpdated)
 
 # palette = tuple(palette)
 palette = tuple([all_palettes['Turbo'][256][idx] for idx in range(50, 256)])
