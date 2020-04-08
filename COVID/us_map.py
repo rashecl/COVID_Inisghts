@@ -1,5 +1,6 @@
 from bokeh.sampledata.us_states import data as stateBorders
 from bokeh.sampledata.us_counties import data as counties
+from COVID.extract import COVID_counts
 import pandas as pd
 import numpy as np
 import pickle

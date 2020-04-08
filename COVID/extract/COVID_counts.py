@@ -124,6 +124,7 @@ if (datetime.now() - lastUpdated).total_seconds()/3600 > 4:
     stateDF_CT = getDailyStateData(src='CT')
     usDF_NYT = getDailyUSData(src='NYT')
     usDF_CT = getDailyUSData(src='CT')
+    lastUpdated = datetime.now()
     pickle.dump([countyDF, stateDF_NYT, stateDF_CT, usDF_NYT, usDF_CT, lastUpdated], open("./COVID/extract/CovidCounts.p", "wb"))
 else:
     pass
