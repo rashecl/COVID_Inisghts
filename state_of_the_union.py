@@ -489,7 +489,7 @@ usData.selected.on_change("indices", us_tap_handler)
 stateData.selected.on_change("indices", state_tap)
 
 # D) Define and display layout
-layout = column(row(usPlot, statePlot, colorBySelector),
+layout = column(row(usPlot, statePlot),
                 row(cumulPlot, dailyPlot),
                 row(cumulCriticalPlot, dailyDeathPlot),
                 row(column(Div(text='*Hospitalization statistics may be confounded by the # of states reporting.', width=300,
