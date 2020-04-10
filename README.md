@@ -1,4 +1,8 @@
 # COVID_Insights
+This code was used to create a visualization of the spread of the coronavirus, which can be found live at:
+http://predict.rocks/state_of_the_union
+
+
 Currently you can see the number of cases in each state if you run US_coronavirus_map.py.
 (You would have to install bokeh.) 
 
