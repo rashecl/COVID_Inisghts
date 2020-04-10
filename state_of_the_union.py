@@ -52,7 +52,7 @@ usPlot.hover.point_policy = "follow_mouse"
 usPlot.patches('x', 'y', source=usData,
                fill_color={'field': 'cases', 'transform': color_mapper},
                fill_alpha=0.7, line_color="white", line_width=0.5)
-usPlot.toolbar.active_drag = us_TOOLS[0]
+usPlot.toolbar.active_drag = None #us_TOOLS[0]
 tick_labels = {'0': '0', '1': '1', '10': '10',
                '100': '100', '1000': '1000',
                '10000': '10,000', '100000': '100,000', '1,000,000': '1,000,000'}
@@ -172,7 +172,7 @@ dailyPlot.add_tools(
               formatters={'@time': 'datetime'})
 )
 
-dailyPlot.toolbar.active_drag = daily_TOOLS[1]
+dailyPlot.toolbar.active_drag = None #daily_TOOLS[1]
 dailyPlot.yaxis.axis_label = '# of people'
 # dailyPlot.yaxis.formatter = formatter = FuncTickFormatter(code="""
 #     parts = tick.toString().split(".");
@@ -202,7 +202,7 @@ dailyDeathPlot.add_tools(
               formatters={'@time': 'datetime'})
 )
 
-dailyDeathPlot.toolbar.active_drag = dailyDeath_TOOLS[1]
+dailyDeathPlot.toolbar.active_drag = None #dailyDeath_TOOLS[1]
 dailyDeathPlot.yaxis.axis_label = '# of people'
 # dailyDeathPlot.yaxis.formatter = FuncTickFormatter(code="""
 #     parts = tick.toString().split(".");
@@ -233,7 +233,7 @@ dailyCriticalPlot.add_tools(
               formatters={'@time': 'datetime'})
 )
 
-dailyCriticalPlot.toolbar.active_drag = dailyCritical_TOOLS[1]
+dailyCriticalPlot.toolbar.active_drag = None #dailyCritical_TOOLS[1]
 dailyCriticalPlot.yaxis.axis_label = '# of people'
 # dailyCriticalPlot.yaxis.formatter = FuncTickFormatter(code="""
 #     parts = tick.toString().split(".");
