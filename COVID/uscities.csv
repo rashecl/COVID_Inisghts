@@ -1,0 +1,143 @@
+city,state,state_name,county_name,county_name_all,lat,lon,population
+Akron,OH,Ohio,Summit,Summit,41.0798,-81.5219,565920
+Albany,NY,New York,Albany,Albany,42.6664,-73.7987,597270
+Albuquerque,NM,New Mexico,Bernalillo,Bernalillo,35.1053,-106.6464,758523
+Allentown,PA,Pennsylvania,Lehigh,Lehigh,40.5961,-75.4755,682899
+Anaheim,CA,California,Orange,Orange,33.839,-117.8573,352497
+Ann Arbor,MI,Michigan,Washtenaw,Washtenaw,42.2755,-83.7312,326288
+Antioch,CA,California,Contra Costa,Contra Costa,37.9789,-121.7957,302885
+Arlington,TX,Texas,Tarrant,Tarrant,32.6998,-97.1251,396394
+Asheville,NC,North Carolina,Buncombe,Buncombe,35.5704,-82.5537,309250
+Atlanta,GA,Georgia,Fulton,Fulton|DeKalb|Cobb,33.7627,-84.4225,5228750
+Augusta,GA,Georgia,Richmond,Richmond,33.3645,-82.0708,389383
+Aurora,CO,Colorado,Adams,Adams|Arapahoe,39.7084,-104.7274,366623
+Austin,TX,Texas,Travis,Travis|Williamson|Hays,30.3006,-97.7517,1638716
+Bakersfield,CA,California,Kern,Kern,35.353,-119.0359,574362
+Baltimore,MD,Maryland,Baltimore,Baltimore,39.3051,-76.6144,2170504
+Baton Rouge,LA,Louisiana,East Baton Rouge,East Baton Rouge,30.4419,-91.131,583613
+Birmingham,AL,Alabama,Jefferson,Jefferson|Shelby,33.5277,-86.7987,744189
+Boise,ID,Idaho,Ada,Ada,43.6007,-116.2312,385218
+Bonita Springs,FL,Florida,Lee,Lee,26.3559,-81.7861,396220
+Boston,MA,Massachusetts,Suffolk,Suffolk,42.3188,-71.0846,4637537
+Bridgeport,CT,Connecticut,Fairfield,Fairfield,41.1918,-73.1953,938406
+Bronx,NY,New York,Bronx,Bronx,40.8501,-73.8662,1455720
+Brooklyn,NY,New York,Kings,Kings,40.6501,-73.9496,2629150
+Buffalo,NY,New York,Erie,Erie,42.9017,-78.8487,926261
+Cape Coral,FL,Florida,Lee,Lee,26.6445,-81.9955,630134
+Charleston,SC,South Carolina,Charleston,Charleston|Berkeley,32.8151,-79.963,616085
+Charlotte,NC,North Carolina,Mecklenburg,Mecklenburg,35.2079,-80.8304,1467362
+Chattanooga,TN,Tennessee,Hamilton,Hamilton,35.0657,-85.2487,407182
+Chicago,IL,Illinois,Cook,Cook,41.8373,-87.6862,8675982
+Cincinnati,OH,Ohio,Hamilton,Hamilton,39.1412,-84.506,1648254
+Cleveland,OH,Ohio,Cuyahoga,Cuyahoga,41.4767,-81.6805,1730363
+Colorado Springs,CO,Colorado,El Paso,El Paso,38.8674,-104.7606,623946
+Columbia,SC,South Carolina,Richland,Richland|Lexington,34.0376,-80.9037,566166
+Columbus,OH,Ohio,Franklin,Franklin|Fairfield|Delaware,39.986,-82.9851,1528314
+Concord,CA,California,Contra Costa,Contra Costa,37.9722,-122.0016,654770
+Corpus Christi,TX,Texas,Nueces,Nueces|San Patricio|Aransas|Kleberg,27.7261,-97.3755,341435
+Dallas,TX,Texas,Dallas,Dallas|Collin|Denton|Kaufman|Rockwall,32.7936,-96.7662,5733259
+Dayton,OH,Ohio,Montgomery,Montgomery,39.7797,-84.1998,718169
+Denton,TX,Texas,Denton,Denton,33.2176,-97.1419,440146
+Denver,CO,Colorado,Denver,Denver,39.7621,-104.8759,2787266
+Des Moines,IA,Iowa,Polk,Polk,41.5725,-93.6105,481222
+Detroit,MI,Michigan,Wayne,Wayne,42.3834,-83.1024,3522206
+Durham,NC,North Carolina,Durham,Durham|Orange,35.9795,-78.9032,407575
+El Paso,TX,Texas,El Paso,El Paso,31.8479,-106.4309,845674
+Fayetteville,AR,Arkansas,Washington,Washington,36.0713,-94.166,341890
+Fayetteville,NC,North Carolina,Cumberland,Cumberland,35.0846,-78.9776,324700
+Flint,MI,Michigan,Genesee,Genesee,43.0235,-83.6922,335354
+Fort Collins,CO,Colorado,Larimer,Larimer,40.5475,-105.0651,303184
+Fort Wayne,IN,Indiana,Allen,Allen,41.0885,-85.1436,328564
+Fort Worth,TX,Texas,Tarrant,Tarrant|Denton|Wise|Parker,32.7812,-97.3472,874168
+Fresno,CA,California,Fresno,Fresno,36.7831,-119.7941,698021
+Grand Rapids,MI,Michigan,Kent,Kent,42.9615,-85.6557,602694
+Greensboro,NC,North Carolina,Guilford,Guilford,36.0956,-79.8268,335588
+Greenville,SC,South Carolina,Greenville,Greenville,34.8362,-82.3649,467894
+Harrisburg,PA,Pennsylvania,Dauphin,Dauphin,40.2752,-76.8843,441580
+Hartford,CT,Connecticut,Hartford,Hartford,41.7661,-72.6834,914751
+Houston,TX,Texas,Harris,Harris|Fort Bend|Montgomery,29.7869,-95.3905,5446468
+Huntsville,AL,Alabama,Madison,Madison|Limestone,34.6988,-86.6412,309716
+Indianapolis,IN,Indiana,Marion,Marion,39.7771,-86.1458,1564699
+Indio,CA,California,Riverside,Riverside,33.7346,-116.2346,408097
+Jackson,MS,Mississippi,Hinds,Hinds|Madison,32.3163,-90.2124,338185
+Jacksonville,FL,Florida,Duval,Duval,30.3322,-81.6749,1156291
+Kansas City,MO,Missouri,Jackson,Jackson|Clay|Platte|Cass,39.1239,-94.5541,1615621
+Kissimmee,FL,Florida,Osceola,Osceola,28.3042,-81.4164,374231
+Knoxville,TN,Tennessee,Knox,Knox,35.9692,-83.9496,585249
+Lancaster,PA,Pennsylvania,Lancaster,Lancaster,40.042,-76.3012,404525
+Lancaster,CA,California,Los Angeles,Los Angeles,34.6934,-118.1753,349218
+Lansing,MI,Michigan,Ingham,Ingham|Eaton,42.7142,-84.5601,320928
+Las Vegas,NV,Nevada,Clark,Clark,36.2333,-115.2654,2073045
+Lexington,KY,Kentucky,Fayette,Fayette,38.0423,-84.4587,315939
+Little Rock,AR,Arkansas,Pulaski,Pulaski,34.7255,-92.358,442699
+Long Beach,CA,California,Los Angeles,Los Angeles,33.798,-118.1675,469450
+Los Angeles,CA,California,Los Angeles,Los Angeles,34.1139,-118.4068,12815475
+Louisville,KY,Kentucky,Jefferson,Jefferson,38.1663,-85.6485,1011696
+Madison,WI,Wisconsin,Dane,Dane,43.0827,-89.3923,439553
+Manhattan,NY,New York,New York,New York,40.7834,-73.9662,1643734
+McAllen,TX,Texas,Hidalgo,Hidalgo,26.2273,-98.2471,800904
+Memphis,TN,Tennessee,Shelby,Shelby,35.1046,-89.9773,1068873
+Mesa,AZ,Arizona,Maricopa,Maricopa,33.4017,-111.7181,496401
+Miami,FL,Florida,Miami-Dade,Miami-Dade,25.7839,-80.2102,6381966
+Milwaukee,WI,Wisconsin,Milwaukee,Milwaukee,43.0642,-87.9673,1377808
+Minneapolis,MN,Minnesota,Hennepin,Hennepin,44.9635,-93.2678,2926757
+Mission Viejo,CA,California,Orange,Orange,33.6095,-117.655,600474
+Mobile,AL,Alabama,Mobile,Mobile,30.6782,-88.1163,318084
+Modesto,CA,California,Stanislaus,Stanislaus,37.6374,-121.0028,381398
+Murrieta,CA,California,Riverside,Riverside,33.572,-117.1909,483681
+Nashville,TN,Tennessee,Davidson,Davidson,36.1715,-86.7843,1076645
+New Haven,CT,Connecticut,New Haven,New Haven,41.3112,-72.9246,568144
+New Orleans,LA,Louisiana,Orleans,Orleans,30.0687,-89.9288,1029123
+Oakland,CA,California,Alameda,Alameda,37.7903,-122.2165,425195
+Ogden,UT,Utah,Weber,Weber,41.228,-111.9677,573632
+Oklahoma City,OK,Oklahoma,Oklahoma,Oklahoma|Cleveland|Canadian|Pottawatomie,35.4676,-97.5137,955998
+Omaha,NE,Nebraska,Douglas,Douglas,41.2628,-96.0498,827786
+Orlando,FL,Florida,Orange,Orange,28.4772,-81.3369,1776841
+Oxnard,CA,California,Ventura,Ventura,34.1962,-119.1819,389792
+Palm Bay,FL,Florida,Brevard,Brevard,27.955,-80.6628,489912
+Palm Coast,FL,Florida,Flagler,Flagler,29.5392,-81.246,401757
+Pensacola,FL,Florida,Escambia,Escambia,30.4427,-87.1886,344400
+Philadelphia,PA,Pennsylvania,Philadelphia,Philadelphia,40.0077,-75.1339,5637884
+Phoenix,AZ,Arizona,Maricopa,Maricopa,33.5722,-112.0891,4081849
+Pittsburgh,PA,Pennsylvania,Allegheny,Allegheny,40.4396,-79.9763,1715297
+Port St. Lucie,FL,Florida,St. Lucie,St. Lucie,27.2796,-80.3884,432589
+Portland,OR,Oregon,Multnomah,Multnomah|Washington|Clackamas,45.5371,-122.65,2052796
+Poughkeepsie,NY,New York,Dutchess,Dutchess,41.6949,-73.921,396041
+Providence,RI,Rhode Island,Providence,Providence,41.823,-71.4187,1206642
+Provo,UT,Utah,Utah,Utah,40.2457,-111.6457,503695
+Queens,NY,New York,Queens,Queens,40.7498,-73.7976,2333054
+Raleigh,NC,North Carolina,Wake,Wake|Durham,35.8324,-78.6438,1018336
+Reno,NV,Nevada,Washoe,Washoe,39.5497,-119.8483,433271
+Richmond,VA,Virginia,Richmond,Richmond,37.5295,-77.4756,1059907
+Riverside,CA,California,Riverside,Riverside,33.9381,-117.3948,2084749
+Rochester,NY,New York,Monroe,Monroe,43.168,-77.6162,711998
+Sacramento,CA,California,Sacramento,Sacramento,38.5667,-121.4683,1854698
+Salt Lake City,UT,Utah,Salt Lake,Salt Lake,40.7774,-111.93,1098400
+San Antonio,TX,Texas,Bexar,Bexar|Medina,29.4658,-98.5254,2002530
+San Diego,CA,California,San Diego,San Diego,32.8312,-117.1225,3210314
+San Francisco,CA,California,San Francisco,San Francisco,37.7562,-122.443,3603761
+San Jose,CA,California,Santa Clara,Santa Clara,37.3021,-121.8489,1821899
+Santa Ana,CA,California,Orange,Orange,33.7366,-117.8819,334136
+Santa Clarita,CA,California,Los Angeles,Los Angeles,34.4155,-118.4992,309378
+Santa Rosa,CA,California,Sonoma,Sonoma,38.4458,-122.7067,321908
+Sarasota,FL,Florida,Sarasota,Sarasota,27.3386,-82.543,706245
+Scranton,PA,Pennsylvania,Lackawanna,Lackawanna,41.4044,-75.6649,389022
+Seattle,WA,Washington,King,King,47.6211,-122.3244,3643765
+Spokane,WA,Washington,Spokane,Spokane,47.6671,-117.433,403043
+Springfield,MA,Massachusetts,Hampden,Hampden,42.1155,-72.5395,628076
+St. Louis,MO,Missouri,St. Louis,St. Louis,38.6358,-90.2451,2078283
+St. Paul,MN,Minnesota,Ramsey,Ramsey,44.9477,-93.104,306621
+Staten Island,NY,New York,Richmond,Richmond,40.5834,-74.1496,476015
+Stockton,CA,California,San Joaquin,San Joaquin,37.9766,-121.3111,394467
+Syracuse,NY,New York,Onondaga,Onondaga,43.0409,-76.1438,407259
+Tampa,FL,Florida,Hillsborough,Hillsborough,27.9942,-82.4451,2804240
+Toledo,OH,Ohio,Lucas,Lucas,41.6639,-83.5822,488672
+Tucson,AZ,Arizona,Pima,Pima,32.1545,-110.8782,868391
+Tulsa,OK,Oklahoma,Tulsa,Tulsa|Osage|Rogers|Wagoner,36.1284,-95.9043,672054
+Victorville,CA,California,San Bernardino,San Bernardino,34.5277,-117.3536,346948
+Virginia Beach,VA,Virginia,Virginia Beach,Virginia Beach,36.7335,-76.0435,1480383
+Washington,DC,District of Columbia,District of Columbia,District of Columbia,38.9047,-77.0163,5289420
+Wichita,KS,Kansas,Sedgwick,Sedgwick,37.6897,-97.3441,483057
+Winston-Salem,NC,North Carolina,Forsyth,Forsyth,36.1029,-80.261,416581
+Worcester,MA,Massachusetts,Worcester,Worcester,42.2705,-71.8079,498997
+Youngstown,OH,Ohio,Mahoning,Mahoning|Trumbull,41.0993,-80.6463,373728
