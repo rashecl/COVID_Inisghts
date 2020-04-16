@@ -29,20 +29,25 @@ palette = tuple([all_palettes['Turbo'][256][idx] for idx in range(50, 256)])
 color_mapper = LogColorMapper(palette=palette, low=1, high=200000)
 
 us_TOOLS = [PanTool(), BoxZoomTool(), WheelZoomTool(), TapTool(), ResetTool()]
-state_TOOLS = [PanTool(), BoxZoomTool(), WheelZoomTool(), TapTool(), HoverTool(), ResetTool()]
+state_TOOLS = [PanTool(), BoxZoomTool(), WheelZoomTool(), TapTool(), ResetTool()]
 cumul_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), ResetTool(), SaveTool()]
 daily_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), ResetTool(), SaveTool()]
 cumulCritical_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), ResetTool(), SaveTool()]
 dailyCritical_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), ResetTool(), SaveTool()]
 dailyDeath_TOOLS = [BoxZoomTool(), PanTool(), WheelZoomTool(), ResetTool(), SaveTool()]
-colorBySelector = Select(title="Color by:", value="cases", options=["cases", "deaths", "caseRate", "deathRate", "testingRate"])
-colorBy = 'cases'
+colorBySelector = Select(title="Color by:", value="cases",
+                         options=[("cases", "Cases"), ("deaths", "Deaths"),
+                                  ("caseRate", "Cases/100k"), ("deathRate", "Deaths/100k"),
+                                  ("testingRate", "Tests/100k")])
+# options=["cases", "deaths", "caseRate", "deathRate", "testingRate"])
+old_colorBy = 'cases'
+new_colorBy = 'cases'
 # A) Define data and plot structures
 
 # 1) Map of US
 usData = ColumnDataSource(
     data=dict(x=[], y=[], cases=[], state=[], deaths=[], caseRate=[], deathRate=[], testingRate=[], colorBy=[]))
-usPlot = figure(title="Coronavirus Map: " + colorBy, tools=us_TOOLS,
+usPlot = figure(title="Coronavirus Map: " + new_colorBy, tools=us_TOOLS,
                 x_axis_location=None, y_axis_location=None,
                 width=60 * 15, height=27 * 15)
 usPlot.grid.grid_line_color = None
@@ -58,7 +63,7 @@ cityData = ColumnDataSource(data=dict(lat=cities['lat'], lon=cities['lon'],
                                       state=cities['state'],
                                       markerSize=cities['population'].apply(lambda x: x ** (1 / 3) / 30)))
 
-cityPoints = usPlot.circle('lon', 'lat', size='markerSize', color="black", fill_alpha=0.7, source=cityData)
+cityPoints = usPlot.circle('lon', 'lat', size='markerSize', color="gray", fill_alpha=0.7, source=cityData)
 usPlot.add_tools(
     HoverTool(renderers=[statePatches], tooltips=[('State', '@state'),
                                                   ("Cases", "@cases{(0.00 a)}"),
@@ -72,7 +77,7 @@ usPlot.add_tools(
     HoverTool(renderers=[cityPoints], tooltips=[("city", "@city"), ("State", "@state"),
                                                 ("Population", "@population{(0,0)}")])
 )
-usPlot.hover.point_policy = "follow_mouse"
+# usPlot.hover.point_policy = "follow_mouse"
 usPlot.toolbar.active_drag = us_TOOLS[0]
 usPlot.toolbar.active_scroll = us_TOOLS[2]
 
@@ -90,24 +95,29 @@ stateData = ColumnDataSource(data=dict(x=[], y=[], name=[], cases=[], state=[],
                                        deaths=[], caseRate=[], deathRate=[], colorBy=[]))
 statePlot = figure(title="State map", tools=state_TOOLS,
                    x_axis_location=None, y_axis_location=None,
-                   tooltips=[('Name', '@name'), ("Cases", "@cases{(0,00)}"), ('State', '@state')],
                    height=405, width=405)
 statePlot.toolbar.active_drag = state_TOOLS[0]
 statePlot.toolbar.active_scroll = state_TOOLS[2]
 statePlot.grid.grid_line_color = None
-statePlot.hover.point_policy = "follow_mouse"
-statePlot.patches('x', 'y', source=stateData,
-                  fill_color={'field': 'colorBy', 'transform': color_mapper},
-                  fill_alpha=0.7, line_color="white", line_width=0.5)
+# statePlot.hover.point_policy = "follow_mouse"
+countyPatches = statePlot.patches('x', 'y', source=stateData,
+                                  fill_color={'field': 'colorBy', 'transform': color_mapper},
+                                  fill_alpha=0.7, line_color="white", line_width=0.5)
 
 stateCityData = ColumnDataSource(data=dict(lat=[], lon=[],
                                            population=[], city=[],
                                            state=[], markerSize=[]))
 
-stateCityPoints = statePlot.circle('lon', 'lat', size='markerSize', color="black", fill_alpha=0.7, source=stateCityData)
+stateCityPoints = statePlot.circle('lon', 'lat', size='markerSize', color="gray", fill_alpha=0.7, source=stateCityData)
+
+statePlot.add_tools(HoverTool(renderers=[countyPatches], tooltips=[('Name', '@name'), ("Cases", "@cases{(0,00)}"),
+                                                                   ("Deaths", "@deaths{(0,00)}"),
+                                                                   ("Cases/100k", "@caseRate{(0,0)}"),
+                                                                   ("Deaths/100k", "@deathRate{(0.0)}"),
+                                                                   ('State', '@state')]))
+
 statePlot.add_tools(HoverTool(renderers=[stateCityPoints], tooltips=[("city", "@city"), ("State", "@state"),
                                                                      ("Population", "@population{(0,0)}")]))
-
 # 3,4) Cumulative temporal graphs (tests, positive):
 
 cumulativeData_CT = ColumnDataSource(data=dict(time=[], total_positive=[], total_testResults=[],
@@ -182,7 +192,7 @@ cumulCriticalPlot.add_tools(
 # 5-7) Daily temporal graphs:
 
 dailyData_CT = ColumnDataSource(data=dict(time=[], new_positive=[], new_testResults=[],
-                                          current_hospitalized=[], current_ICU=[], new_deaths=[], source=[]))
+                                          current_hospitalized=[], current_ICU=[], new_deaths=[], source=[], states_reporting_hosp=[], states_reporting_ICU=[]))
 dailyData_NYT = ColumnDataSource(data=dict(time=[], new_positive=[], new_deaths=[], source=[]))
 
 dailyPlot = figure(tools=daily_TOOLS, x_axis_type='datetime', width=650, height=250, title="Daily statistics",
@@ -264,11 +274,14 @@ current_ICU = dailyCriticalPlot.line('time', 'current_ICU', source=dailyData_CT,
 # new_deaths_NYT.visible = False
 dailyCriticalPlot.add_tools(HoverTool(renderers=[current_hospitalized],
                                       tooltips=[("current_hospitalized", "@current_hospitalized{(0,00)}"),
+                                                ("states_reporting_hosp", "@states_reporting_hosp"),
                                                 ("date", "@time{%F}")],
                                       formatters={'@time': 'datetime'})
                             )
 dailyCriticalPlot.add_tools(
-    HoverTool(renderers=[current_ICU], tooltips=[("current_ICU", "@current_ICU{(0,00)}"), ("date", "@time{%F}")],
+    HoverTool(renderers=[current_ICU], tooltips=[("current_ICU", "@current_ICU{(0,00)}"),
+                                                 ("states_reporting_ICU", "@states_reporting_ICU"),
+                                                 ("date", "@time{%F}")],
               formatters={'@time': 'datetime'})
 )
 
@@ -319,13 +332,24 @@ print("Completed defining data")
 
 # 2) Define function on selection of new state:
 def updateState():
-    global countyDF, state, stateCountyDF, stateBorders, colorBy, stateColorBys
+    global countyDF, state, stateCountyDF, stateBorders, new_colorBy, old_colorBy, stateColorBys
     print(state)
+    state_name = stateBorders[state]['name']
     stateCountyDF = countyDF.query("state == '" + state + "'")
     stateCountyBorders = countyBorders[countyBorders['state'] == state]
     county_xs = [stateCountyBorders.iloc[i, :]['lons'] for i in range(len(stateCountyBorders))]
     county_ys = [stateCountyBorders.iloc[i, :]['lats'] for i in range(len(stateCountyBorders))]
-    county_names = [stateCountyBorders.iloc[i, :]['county'] for i in range(len(stateCountyBorders))]
+    if state != 'NY':
+        county_names = [stateCountyBorders.iloc[i, :]['county'] for i in range(len(stateCountyBorders))]
+    else:
+        county_names = []
+        for i in range(len(stateCountyBorders)):
+            county_name = stateCountyBorders.iloc[i, :]['county']
+            if county_name in ('Queens', 'Bronx', 'Richmond', 'Kings', 'New York'):
+                county_names.append(county_name + " (NYC)")
+            else:
+                county_names.append(county_name)
+
     state_names = [state for i in range(len(stateCountyBorders))]
     # county_val = [rand() for i in range(len(stateCounties))]
     cases = []
@@ -333,12 +357,20 @@ def updateState():
     deaths = []
     deathRate = []
 
-    for county in county_names:
-        if county in list(stateCountyDF['county'].unique()):
+    for county in [county.split(' (NYC')[0] for county in
+                   county_names]:  # TODO: Change this so it flexible handles other cities
+        if (state == 'NY') and county in ('Queens', 'Bronx', 'Richmond', 'Kings', 'New York'):
+            cases.append(stateCountyDF[stateCountyDF['county'] == 'New York City'].positive.values[-1])
+            caseRate.append(stateCountyDF[stateCountyDF['county'] == 'New York City'].positiveRate.values[-1])
+            deaths.append(stateCountyDF[stateCountyDF['county'] == 'New York City'].death.values[-1])
+            deathRate.append(stateCountyDF[stateCountyDF['county'] == 'New York City'].deathRate.values[-1])
+
+        elif county in list(stateCountyDF['county'].unique()):
             cases.append(stateCountyDF[stateCountyDF['county'] == county].positive.values[-1])
             caseRate.append(stateCountyDF[stateCountyDF['county'] == county].positiveRate.values[-1])
             deaths.append(stateCountyDF[stateCountyDF['county'] == county].death.values[-1])
-            deathRate.append(stateCountyDF[stateCountyDF['county'] == county].positiveRate.values[-1])
+            deathRate.append(stateCountyDF[stateCountyDF['county'] == county].deathRate.values[-1])
+
         else:
             cases.append(0)
             caseRate.append(0)
@@ -352,8 +384,15 @@ def updateState():
         state=state_names,
         deaths=deaths,
         deathRate=deathRate,
-        caseRate=caseRate,
-        colorBy=eval(colorBy))
+        caseRate=caseRate)
+
+    if new_colorBy != 'testingRate':
+        stateColorBys.update({'colorBy': eval(new_colorBy)})
+        statePlot.title.text = state_name + ': ' + new_colorBy
+    else:
+        stateColorBys.update({'colorBy': eval(old_colorBy)})
+        statePlot.title.text = state_name + ': ' + old_colorBy
+
     stateData.data = stateColorBys
 
     # Set new limits and re-title state plot:
@@ -369,14 +408,13 @@ def updateState():
     statePlot.y_range.start = np.average(yrange) - .55 * plotRange
     statePlot.y_range.end = np.average(yrange) + .55 * plotRange
 
-    state_name = stateBorders[state]['name']
-    cumulPlot.title.text = state_name + ': Cumulative testing data'
-    statePlot.title.text = state_name + ': '+ colorBy
-
-    cumulCriticalPlot.title.text = state_name + ': Cumulative deaths'
-    dailyPlot.title.text = state_name + ': Daily testing data'
-    dailyDeathPlot.title.text = state_name + ': Daily deaths'
-    dailyCriticalPlot.title.text = state_name + ': Daily hospitalization data*'
+    # state_name = stateBorders[state]['name']
+    # cumulPlot.title.text = state_name + ': Cumulative testing data'
+    #
+    # cumulCriticalPlot.title.text = state_name + ': Cumulative deaths'
+    # dailyPlot.title.text = state_name + ': Daily testing data'
+    # dailyDeathPlot.title.text = state_name + ': Daily deaths'
+    # dailyCriticalPlot.title.text = state_name + ': Daily hospitalization data*'
     # Update stateData:
     sourceStateData()
     return
@@ -384,7 +422,7 @@ def updateState():
 
 # 3) Define data for temporal graphs:
 def sourceUSdata():
-    global usDF_CT
+    global usDF_CT, stateDF_CT
     CTdf = usDF_CT
     dailyData_CT.data = dict(
         time=CTdf['date'],
@@ -392,6 +430,8 @@ def sourceUSdata():
         new_positive=CTdf['positiveIncrease'],
         new_testResults=CTdf['totalTestResultsIncrease'],
         current_hospitalized=CTdf['hospitalizedCurrently'],
+        states_reporting_hosp=stateDF_CT.groupby('date').count()['hospitalizedCurrently'],
+        states_reporting_ICU=stateDF_CT.groupby('date').count()['inIcuCurrently'],
         current_ICU=CTdf['inIcuCurrently'],
         new_deaths=CTdf['deathIncrease'],
         source=CTdf['source'])
@@ -449,6 +489,8 @@ def sourceStateData():
         current_hospitalized=CTdf['hospitalizedCurrently'],
         current_ICU=CTdf['inIcuCurrently'],
         new_deaths=CTdf['deathIncrease'],
+        states_reporting_hosp=['N/A']*len(CTdf['hospitalizedCurrently']),
+        states_reporting_ICU=['N/A'] * len(CTdf['inIcuCurrently']),
         source=CTdf['source'])
 
     cumulativeData_CT.data = dict(
@@ -477,15 +519,22 @@ def sourceStateData():
         total_positive=NYTdf['positive'],
         total_deaths=NYTdf['death'],
         source=NYTdf['source'])
+    state_name = stateBorders[state]['name']
+    cumulPlot.title.text = state_name + ': Cumulative testing data'
+
+    cumulCriticalPlot.title.text = state_name + ': Cumulative deaths'
+    dailyPlot.title.text = state_name + ': Daily testing data'
+    dailyDeathPlot.title.text = state_name + ': Daily deaths'
+    dailyCriticalPlot.title.text = state_name + ': Daily hospitalization data*'
     return
 
 
 def sourceCountyData():
     global stateCountyDF, county, state
     NYTdf = stateCountyDF
+    # Clear all fields first
     dailyData_CT.data = dict(
         time=[],
-        # date=[],
         new_positive=[],
         new_testResults=[],
         current_hospitalized=[],
@@ -495,7 +544,6 @@ def sourceCountyData():
 
     cumulativeData_CT.data = dict(
         time=[],
-        # date=[],
         total_positive=[],
         total_testResults=[],
         testingRate=[],
@@ -506,14 +554,12 @@ def sourceCountyData():
 
     dailyData_NYT.data = dict(
         time=NYTdf['date'],
-        # date=NYTdf['date'].astype(str),
         new_positive=NYTdf['positiveIncrease'],
         new_deaths=NYTdf['deathIncrease'],
         source=NYTdf['source'])
 
     cumulativeData_NYT.data = dict(
         time=NYTdf['date'],
-        # date=NYTdf['date'].astype(str),
         total_positive=NYTdf['positive'],
         total_deaths=NYTdf['death'],
         source=NYTdf['source'])
@@ -541,17 +587,23 @@ def us_tap_handler(attr, old, new):
 
 
 def state_tap(attr, old, new):
-    global state, stateCountyDF, statesDF, stateBorders, county
+    global state, stateCountyDF, statesDF, stateBorders, county, countyDF
     print(state)
     print(new)
     if len(new) == 0:
+        sourceStateData()
         pass  # updateState()
     else:
         stateCountyBorders = countyBorders[countyBorders['state'] == state]
         county = stateCountyBorders.county.iloc[new[0]]
         print(stateBorders[state]['name'])
         print(county)
-        stateCountyDF = countyDF.query("(state == '" + state + "') & (county == '" + county + "')")
+        if (state == 'NY') and county in ('Queens', 'Bronx', 'Richmond', 'Kings',
+                                          'New York'):  # TODO: change this code if these counties start reporting separately
+            county = 'New York City'
+            stateCountyDF = countyDF.query("(state == '" + state + "') & (county == 'New York City')")
+        else:
+            stateCountyDF = countyDF.query("(state == '" + state + "') & (county == '" + county + "')")
         if len(stateCountyDF) == 0:
             print('No data for this county: ' + county)
         else:
@@ -572,34 +624,35 @@ def state_tap(attr, old, new):
 
 
 def colorByHandler(attr, old, new):
-    global colorBy, stateColorBys
-    colorBy = new
-    print("Previous label: " + old)
-    print("Updated label: " + colorBy)
+    global colorBy, stateColorBys, new_colorBy, old_colorBy
+    old_colorBy = old
+    new_colorBy = new
+    print("Previous label: " + old_colorBy)
+    print("Updated label: " + new_colorBy)
 
-    usColorBys['colorBy'] = usColorBys[colorBy]
+    usColorBys['colorBy'] = usColorBys[new_colorBy]
     usData.data = usColorBys
-    usPlot.title.text = "Coronavirus Map: " + colorBy
+    usPlot.title.text = "Coronavirus Map: " + new_colorBy
 
-    if colorBy != 'testingRate':
-        stateColorBys['colorBy'] = stateColorBys[colorBy]
+    if new_colorBy != 'testingRate':
+        stateColorBys['colorBy'] = stateColorBys[new_colorBy]
         stateData.data = stateColorBys
-        print(stateColorBys['state'][0] + ': ' + colorBy)
-        statePlot.title.text = stateColorBys['state'][0] + ': ' + colorBy
+        print(stateColorBys['state'][0] + ': ' + new_colorBy)
+        statePlot.title.text = stateColorBys['state'][0] + ': ' + new_colorBy
     else:
-        statePlot.title.text = stateColorBys['state'][0] + ': ' + old + " (no county level testing data)"
+        statePlot.title.text = stateColorBys['state'][0] + ': ' + old_colorBy + " (no county level testing data)"
     return
 
 
 usData.selected.on_change("indices", us_tap_handler)
 stateData.selected.on_change("indices", state_tap)
 colorBySelector.on_change("value", colorByHandler)
-layout = column(row(usPlot, statePlot, colorBySelector),
+layout = column(row(usPlot, column(statePlot, colorBySelector)),
                 row(cumulPlot, dailyPlot),
                 row(cumulCriticalPlot, dailyDeathPlot),
                 row(Div(
-                    text='*Hospitalization statistics may be confounded by the # of states reporting. ' + ' \n Last updated: ' + str(
-                        lastUpdated)[0:16], width=300,
+                    text='*Hospitalization statistics may be confounded by the # of states reporting. ' + '<br> <b>Last updated:</b> ' + str(
+                        lastUpdated)[0:16] + '<br> <b>Sources:</b> New York Times (NYT) and The COVID Tracking Project (CT)', width=300,
                     style={'font-size': '150%', 'color': 'black'}),
                     dailyCriticalPlot))
 # Initiate with US data:
