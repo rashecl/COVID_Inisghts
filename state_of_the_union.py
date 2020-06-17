@@ -79,7 +79,7 @@ usPlot.add_tools(
 )
 # usPlot.hover.point_policy = "follow_mouse"
 usPlot.toolbar.active_drag = us_TOOLS[0]
-usPlot.toolbar.active_scroll = us_TOOLS[2]
+usPlot.toolbar.active_scroll = None # us_TOOLS[2]
 
 tick_labels = {'0': '0', '1': '1', '10': '10',
                '100': '100', '1000': '1000',
@@ -97,7 +97,7 @@ statePlot = figure(title="State map", tools=state_TOOLS,
                    x_axis_location=None, y_axis_location=None,
                    height=405, width=405)
 statePlot.toolbar.active_drag = state_TOOLS[0]
-statePlot.toolbar.active_scroll = state_TOOLS[2]
+statePlot.toolbar.active_scroll = None#state_TOOLS[2]
 statePlot.grid.grid_line_color = None
 # statePlot.hover.point_policy = "follow_mouse"
 countyPatches = statePlot.patches('x', 'y', source=stateData,
@@ -161,6 +161,7 @@ cumulPlot.add_tools(
                         ("date", "@time{%F}")],
               formatters={'@time': 'datetime'})
 )
+cumulPlot.toolbar.active_drag = None
 # 4) Cumulative critical cases (deaths for now):
 
 cumulCriticalPlot = figure(tools=cumulCritical_TOOLS, x_axis_type='datetime', width=650, height=250,
@@ -189,6 +190,7 @@ cumulCriticalPlot.add_tools(
     HoverTool(renderers=[total_deaths_NYT], tooltips=[("total_deaths", "@total_deaths{(0,00)}"), ("date", "@time{%F}")],
               formatters={'@time': 'datetime'})
 )
+cumulCriticalPlot.toolbar.active_drag = None
 # 5-7) Daily temporal graphs:
 
 dailyData_CT = ColumnDataSource(data=dict(time=[], new_positive=[], new_testResults=[],
